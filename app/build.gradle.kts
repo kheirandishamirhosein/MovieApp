@@ -78,12 +78,17 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
     //Dagger Hilt
     implementation("com.google.dagger:hilt-android:2.50")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     kapt("com.google.dagger:hilt-android-compiler:2.50")
     //Coil
     implementation("io.coil-kt:coil-compose:1.3.2")
     //Animation
     implementation("androidx.compose.animation:animation-core:1.6.8")
+    //Room
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+
 }
 
 kapt {

@@ -1,6 +1,8 @@
 package com.example.movieapp.di
 
 import android.app.Application
+import androidx.room.Room
+import com.example.movieapp.data.local.database.MovieDb
 import com.example.movieapp.data.remote.api.MovieApiService
 import com.example.movieapp.data.repository.MovieRepository
 import com.example.movieapp.util.NetworkUtils
@@ -13,6 +15,7 @@ object DIContainer {
 
     private lateinit var movieApiService: MovieApiService
     private lateinit var movieRepository: MovieRepository
+    private lateinit var database: MovieDb
 
     fun init(application: Application) {
         // Initialize Retrofit and Moshi
@@ -28,8 +31,16 @@ object DIContainer {
         // Initialize MovieApiService
         movieApiService = retrofit.create(MovieApiService::class.java)
 
+        // Initialize room db
+        database = Room.databaseBuilder(
+            application.applicationContext,
+            MovieDb::class.java, "movie-database"
+        ).build()
+
         // Initialize MovieRepository
-        movieRepository = MovieRepository(movieApiService)
+        movieRepository = MovieRepository(movieApiService, database.movieDao())
+
+
     }
 
     fun provideMovieApiService(): MovieApiService {
