@@ -4,8 +4,8 @@ import android.util.Log
 import com.example.movieapp.data.local.dao.MovieDao
 import com.example.movieapp.data.local.entities.toEntity
 import com.example.movieapp.data.remote.api.MovieApiService
-import com.example.movieapp.doman.model.MovieResponse
-import com.example.movieapp.doman.model.ResultMovie
+import com.example.movieapp.data.remote.model.MovieResponse
+import com.example.movieapp.data.remote.model.ResultMovie
 import com.example.movieapp.presentation.state.ResultStates
 
 class MovieRepository(

@@ -1,4 +1,4 @@
-package com.example.movieapp.doman.model
+package com.example.movieapp.data.remote.model
 
 import com.squareup.moshi.Json
 

@@ -1,4 +1,4 @@
-package com.example.movieapp.main
+package com.example.movieapp.presentation.main
 
 import android.app.Application
 import com.example.movieapp.di.DIContainer

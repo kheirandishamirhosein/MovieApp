@@ -1,4 +1,4 @@
-package com.example.movieapp.ui.home
+package com.example.movieapp.presentation.ui.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -29,8 +29,8 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.example.movieapp.di.DIContainer
 import com.example.movieapp.di.Factory
-import com.example.movieapp.doman.model.MovieResponse
-import com.example.movieapp.doman.model.ResultMovie
+import com.example.movieapp.data.remote.model.MovieResponse
+import com.example.movieapp.data.remote.model.ResultMovie
 import com.example.movieapp.presentation.state.ResultStates
 import com.example.movieapp.presentation.viewmodel.MovieViewModel
 import kotlinx.coroutines.launch
@@ -85,7 +85,7 @@ fun HomeScreen(
                     is ResultStates.Error -> {
                         Box(
                             modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            contentAlignment = Alignment.TopCenter
                         ) {
                             Text("Error: ${(moviesState as ResultStates.Error).exception.message}")
                         }

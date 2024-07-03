@@ -3,7 +3,7 @@ package com.example.movieapp.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.data.repository.MovieRepository
-import com.example.movieapp.doman.model.MovieResponse
+import com.example.movieapp.data.remote.model.MovieResponse
 import com.example.movieapp.presentation.state.ResultStates
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

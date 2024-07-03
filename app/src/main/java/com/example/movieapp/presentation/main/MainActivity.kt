@@ -1,4 +1,4 @@
-package com.example.movieapp.main
+package com.example.movieapp.presentation.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -15,8 +15,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.movieapp.di.DIContainer
 import com.example.movieapp.di.Factory
 import com.example.movieapp.presentation.viewmodel.MovieViewModel
-import com.example.movieapp.ui.home.HomeScreen
-import com.example.movieapp.ui.theme.MovieAppTheme
+import com.example.movieapp.presentation.ui.home.HomeScreen
+import com.example.movieapp.presentation.ui.theme.MovieAppTheme
 
 class MainActivity : ComponentActivity() {
     private lateinit var movieViewModel: MovieViewModel
