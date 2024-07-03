@@ -1,5 +1,6 @@
 package com.example.movieapp.data.repository
 
+import android.util.Log
 import com.example.movieapp.data.local.dao.MovieDao
 import com.example.movieapp.data.local.entities.toEntity
 import com.example.movieapp.data.remote.api.MovieApiService
@@ -14,20 +15,16 @@ class MovieRepository(
 
     suspend fun getPopularMovies(): ResultStates<MovieResponse> {
         return try {
-            val response = apiService.getPopularMovies()
-            if (response.isSuccessful) {
-                response.body()?.let { movieResponse ->
-                    // convert MovieResponse to MovieEntity and save in Room db
-                    val movieEntities = movieResponse.results.map { it.toEntity() }
-                    movieDao.deleteAllMovies()
-                    movieDao.insertMovies(movieEntities)
-                    ResultStates.Success(movieResponse)
-                } ?: ResultStates.Error(Exception("Response body is null"))
-            } else {
-                ResultStates.Error(Exception("Failed to fetch data"))
-            }
+            val movieResponse = apiService.getPopularMovies()
+            Log.d("success getPopularMovies", movieResponse.toString())
+            // convert MovieResponse to MovieEntity and save in Room db
+            val movieEntities = movieResponse.results.map { it.toEntity() }
+            movieDao.deleteAllMovies()
+            movieDao.insertMovies(movieEntities)
+            ResultStates.Success(movieResponse)
         } catch (e: Exception) {
-            // in error return last data saved in room db
+            Log.e("error getPopularMovies", e.message.toString())
+            //In case of error , return last data saved in room db
             val cachedMovies = movieDao.getAllMovies()
             if (cachedMovies.isNotEmpty()) {
                 ResultStates.Success(

@@ -10,5 +10,5 @@ interface MovieApiService {
     @GET("movie/popular")
     suspend fun getPopularMovies(
         @Query("api_key") apiKey: String = NetworkUtils.API_KEY
-    ): Response<MovieResponse>
+    ): MovieResponse
 }
