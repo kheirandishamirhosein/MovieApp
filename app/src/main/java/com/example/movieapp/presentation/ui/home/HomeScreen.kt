@@ -24,11 +24,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.example.movieapp.di.DIContainer
-import com.example.movieapp.di.Factory
 import com.example.movieapp.data.remote.model.MovieResponse
 import com.example.movieapp.data.remote.model.ResultMovie
 import com.example.movieapp.presentation.state.ResultStates
@@ -38,7 +36,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    viewModel: MovieViewModel = viewModel(factory = Factory(DIContainer.provideMovieRepository()))
+    viewModel: MovieViewModel = hiltViewModel()
 ) {
     val moviesState by viewModel.movies.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }

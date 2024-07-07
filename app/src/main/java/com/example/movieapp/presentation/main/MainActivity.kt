@@ -17,21 +17,23 @@ import com.example.movieapp.di.Factory
 import com.example.movieapp.presentation.viewmodel.MovieViewModel
 import com.example.movieapp.presentation.ui.home.HomeScreen
 import com.example.movieapp.presentation.ui.theme.MovieAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private lateinit var movieViewModel: MovieViewModel
+    //private lateinit var movieViewModel: MovieViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         // Initialize MovieViewModel using Factory
-        val factory = Factory(DIContainer.provideMovieRepository())
-        movieViewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
+        //val factory = Factory(DIContainer.provideMovieRepository())
+        //movieViewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
 
         setContent {
             MovieAppTheme {
-                HomeScreen(movieViewModel)
+                HomeScreen()
             }
         }
     }
