@@ -1,6 +1,7 @@
-package com.example.movieapp.presentation.ui.home
+package com.example.movieapp.presentation.ui.popular.movieList.compose
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,17 +26,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.MovieResponse
 import com.example.movieapp.data.remote.model.ResultMovie
 import com.example.movieapp.presentation.state.ResultStates
-import com.example.movieapp.presentation.viewmodel.MovieViewModel
+import com.example.movieapp.presentation.ui.popular.movieList.viewmodel.MovieViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
+fun PopularMovieListScreen(
+    navController: NavController,
     viewModel: MovieViewModel = hiltViewModel()
 ) {
     val moviesState by viewModel.movies.collectAsState()
@@ -77,7 +80,9 @@ fun HomeScreen(
                     is ResultStates.Success -> {
                         val movies =
                             (moviesState as ResultStates.Success<MovieResponse>).data.results
-                        MovieList(movies = movies)
+                        MovieList(movies = movies) { movie ->
+                            navController.navigate("movieDetail/${movie.id}")
+                        }
                     }
 
                     is ResultStates.Error -> {
@@ -95,21 +100,22 @@ fun HomeScreen(
 }
 
 @Composable
-fun MovieList(movies: List<ResultMovie>) {
+fun MovieList(movies: List<ResultMovie>, onItemClick: (ResultMovie) -> Unit) {
     LazyColumn {
         items(movies) { movie ->
-            MovieItem(movie = movie)
+            MovieItem(movie = movie, onClick = { onItemClick(movie) })
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
+@OptIn(ExperimentalCoilApi::class)
 @Composable
-fun MovieItem(movie: ResultMovie) {
+fun MovieItem(movie: ResultMovie, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
+            .clickable { onClick() }
     ) {
         Image(
             painter = rememberImagePainter("https://image.tmdb.org/t/p/w500${movie.posterPath}"),

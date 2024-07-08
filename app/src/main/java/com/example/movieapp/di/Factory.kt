@@ -3,7 +3,7 @@ package com.example.movieapp.di
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.movieapp.data.repository.MovieRepository
-import com.example.movieapp.presentation.viewmodel.MovieViewModel
+import com.example.movieapp.presentation.ui.popular.movieList.viewmodel.MovieViewModel
 
 class Factory(private val repository: MovieRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

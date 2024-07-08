@@ -57,4 +57,14 @@ class MovieRepository(
             }
         }
     }
+
+    suspend fun getMovieDetails(movieId: Int): ResultStates<ResultMovie> {
+        return try {
+            val movieDetails = apiService.getMovieDetails(movieId)
+            ResultStates.Success(movieDetails)
+        } catch (e: Exception) {
+            ResultStates.Error(e)
+        }
+    }
+
 }

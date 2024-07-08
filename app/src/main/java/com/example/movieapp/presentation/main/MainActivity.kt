@@ -4,18 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.ViewModelProvider
-import com.example.movieapp.di.DIContainer
-import com.example.movieapp.di.Factory
-import com.example.movieapp.presentation.viewmodel.MovieViewModel
-import com.example.movieapp.presentation.ui.home.HomeScreen
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.movieapp.presentation.ui.popular.details.compose.DetailsPopularScreen
+import com.example.movieapp.presentation.ui.popular.movieList.compose.PopularMovieListScreen
 import com.example.movieapp.presentation.ui.theme.MovieAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,17 +29,25 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MovieAppTheme {
-                HomeScreen()
+                NavGraph()
             }
         }
     }
 }
 
-
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    MovieAppTheme {
-
+fun NavGraph(startDestination: String = "movieList") {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = startDestination) {
+        composable("movieList") {
+            PopularMovieListScreen(navController)
+        }
+        composable(
+            "movieDetail/{movieId}",
+            arguments = listOf(navArgument("movieId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
+            DetailsPopularScreen(navController, movieId)
+        }
     }
 }
