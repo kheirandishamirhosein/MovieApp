@@ -83,12 +83,28 @@ fun MovieCard(movie: ResultMovie) {
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(
-                        text = movie.title,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
+                    val titleParts = movie.title.split(":")
+                    if (titleParts.size > 1) {
+                        Text(
+                            text = titleParts[0] + ":",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                        Text(
+                            text = titleParts.drop(1).joinToString(":"),
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    } else {
+                        Text(
+                            text = movie.title,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
                     Spacer(modifier = Modifier.height(4.dp))
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
