@@ -1,4 +1,4 @@
-package com.example.movieapp.presentation.ui.popular.details.compose
+package com.example.movieapp.presentation.ui.navigation.popularMovie.details.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -40,7 +40,7 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.ResultMovie
 import com.example.movieapp.presentation.state.ResultStates
-import com.example.movieapp.presentation.ui.popular.details.viewmodel.MovieDetailViewModel
+import com.example.movieapp.presentation.ui.navigation.popularMovie.details.viewmodel.MovieDetailViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
 @Composable

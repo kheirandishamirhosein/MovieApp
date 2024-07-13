@@ -10,8 +10,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.movieapp.presentation.ui.popular.details.compose.DetailsPopularScreen
-import com.example.movieapp.presentation.ui.popular.movieList.compose.PopularMovieListScreen
+import com.example.movieapp.presentation.ui.navigation.navigationBottom.BottomNavigationScreen
+import com.example.movieapp.presentation.ui.navigation.popularMovie.details.compose.DetailsPopularScreen
+import com.example.movieapp.presentation.ui.navigation.popularMovie.movieList.compose.PopularMovieListScreen
 import com.example.movieapp.presentation.ui.theme.MovieAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,7 +30,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MovieAppTheme {
-                NavGraph()
+                BottomNavigationScreen()
+                //NavGraph()
+                //TODO: CRASH APP
             }
         }
     }

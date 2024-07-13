@@ -1,4 +1,4 @@
-package com.example.movieapp.presentation.ui.popular.movieList.compose
+package com.example.movieapp.presentation.ui.navigation.popularMovie.movieList.compose
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -29,7 +29,7 @@ import androidx.navigation.NavController
 import com.example.movieapp.data.remote.model.MovieResponse
 import com.example.movieapp.data.remote.model.ResultMovie
 import com.example.movieapp.presentation.state.ResultStates
-import com.example.movieapp.presentation.ui.popular.movieList.viewmodel.MovieViewModel
+import com.example.movieapp.presentation.ui.navigation.popularMovie.movieList.viewmodel.MovieViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

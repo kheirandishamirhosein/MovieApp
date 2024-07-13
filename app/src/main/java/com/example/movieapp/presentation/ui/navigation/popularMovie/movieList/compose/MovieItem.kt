@@ -1,4 +1,4 @@
-package com.example.movieapp.presentation.ui.popular.movieList.compose
+package com.example.movieapp.presentation.ui.navigation.popularMovie.movieList.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
