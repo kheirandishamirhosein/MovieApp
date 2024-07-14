@@ -6,14 +6,11 @@ import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
+import com.example.movieapp.R
 
 sealed class ScreenState(val route: String, val icon: ImageVector, val title: String) {
-    data object PopularMovies :
-        ScreenState("popular_movies", Icons.Default.Favorite, "Popular Movies")
-
-    data object UpcomingMovies :
-        ScreenState("upcoming_movies", Icons.Default.DateRange, "upcoming_movies")
-
-    data object PopularTVShows :
-        ScreenState("popular_tv_shows", Icons.Default.AccountBox, "Popular TV Shows")
+    class PopularMovies(icon: ImageVector) : ScreenState("popular_movies", icon, "Movies")
+    class UpcomingMovies(icon: ImageVector) : ScreenState("upcoming_movies", icon, "Upcoming Movies")
+    class PopularTVShows(icon: ImageVector) : ScreenState("popular_tv_shows", icon, "TV Shows")
 }

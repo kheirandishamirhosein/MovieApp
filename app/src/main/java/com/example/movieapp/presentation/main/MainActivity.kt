@@ -31,26 +31,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             MovieAppTheme {
                 BottomNavigationScreen()
-                //NavGraph()
-                //TODO: CRASH APP
             }
         }
     }
-}
 
-@Composable
-fun NavGraph(startDestination: String = "movieList") {
-    val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = startDestination) {
-        composable("movieList") {
-            PopularMovieListScreen(navController)
-        }
-        composable(
-            "movieDetail/{movieId}",
-            arguments = listOf(navArgument("movieId") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
-            DetailsPopularScreen(navController, movieId)
-        }
-    }
 }
