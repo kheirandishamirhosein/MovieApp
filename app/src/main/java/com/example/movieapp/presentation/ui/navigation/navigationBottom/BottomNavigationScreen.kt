@@ -22,7 +22,7 @@ import androidx.navigation.navArgument
 import com.example.movieapp.presentation.ui.navigation.popularMovie.details.compose.DetailsPopularScreen
 import com.example.movieapp.presentation.ui.navigation.popularMovie.movieList.compose.PopularMovieListScreen
 import com.example.movieapp.presentation.ui.navigation.popularTv.PopularTvShowsListScreen
-import com.example.movieapp.presentation.ui.navigation.uncoming.UpcomingMoviesScreen
+import com.example.movieapp.presentation.ui.navigation.uncoming.compose.UpcomingMoviesScreen
 import com.example.movieapp.util.getIcons
 
 @Composable
@@ -44,7 +44,6 @@ fun BottomNavigationScreen() {
                 composable(items[0].route) { PopularMovieListScreen(navController = navController) }
                 composable(items[1].route) { UpcomingMoviesScreen() }
                 composable(items[2].route) { PopularTvShowsListScreen() }
-                //For move to detail Film
                 composable(
                     "movieDetail/{movieId}",
                     arguments = listOf(navArgument("movieId") { type = NavType.IntType })
@@ -56,6 +55,7 @@ fun BottomNavigationScreen() {
         }
     }
 }
+
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController, items: List<ScreenState>) {

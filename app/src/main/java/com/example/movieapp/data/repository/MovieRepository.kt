@@ -67,4 +67,13 @@ class MovieRepository(
         }
     }
 
+    suspend fun getUpcomingMovies(): ResultStates<MovieResponse> {
+        return try {
+            val movieResponse = apiService.getUpcomingMovies()
+            ResultStates.Success(movieResponse)
+        } catch (ex: Exception) {
+            ResultStates.Error(ex)
+        }
+    }
+
 }

@@ -20,4 +20,9 @@ interface MovieApiService {
         @Query("api_key") apiKey: String = NetworkUtils.API_KEY
     ): ResultMovie
 
+    @GET("movie/upcoming")
+    suspend fun getUpcomingMovies(
+        @Query("api_key") apiKey: String = NetworkUtils.API_KEY
+    ): MovieResponse
+
 }
