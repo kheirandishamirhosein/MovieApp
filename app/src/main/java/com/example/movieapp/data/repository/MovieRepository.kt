@@ -7,8 +7,9 @@ import com.example.movieapp.data.remote.api.apiWrapper
 import com.example.movieapp.data.remote.model.MovieResponse
 import com.example.movieapp.data.remote.model.ResultMovie
 import com.example.movieapp.presentation.state.ResultStates
+import javax.inject.Inject
 
-class MovieRepository(
+class MovieRepository @Inject constructor(
     private val apiService: MovieApiService,
     private val movieDao: MovieDao
 ) {
