@@ -3,7 +3,6 @@ package com.example.movieapp.presentation.ui.navigation.uncoming.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.data.remote.model.MovieResponse
-import com.example.movieapp.data.remote.model.ResultMovie
 import com.example.movieapp.data.repository.MovieRepository
 import com.example.movieapp.presentation.state.ResultStates
 import dagger.hilt.android.lifecycle.HiltViewModel
