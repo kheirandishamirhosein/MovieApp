@@ -70,8 +70,10 @@ class MovieRepository(
     suspend fun getUpcomingMovies(): ResultStates<MovieResponse> {
         return try {
             val movieResponse = apiService.getUpcomingMovies()
+            Log.d("success getUpcomingMovies", movieResponse.toString())
             ResultStates.Success(movieResponse)
         } catch (ex: Exception) {
+            Log.e("error getUpcomingMovies", ex.message.toString())
             ResultStates.Error(ex)
         }
     }
