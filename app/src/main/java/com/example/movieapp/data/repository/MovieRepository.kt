@@ -7,6 +7,8 @@ import com.example.movieapp.data.remote.api.apiWrapper
 import com.example.movieapp.data.remote.model.MovieResponse
 import com.example.movieapp.data.remote.model.ResultMovie
 import com.example.movieapp.presentation.state.ResultStates
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class MovieRepository @Inject constructor(
@@ -14,59 +16,59 @@ class MovieRepository @Inject constructor(
     private val movieDao: MovieDao
 ) {
 
-    suspend fun getPopularMovies(): ResultStates<MovieResponse> {
-        return apiWrapper {
+    suspend fun getPopularMovies(): Flow<ResultStates<MovieResponse>> = flow {
+        emit(ResultStates.Loading)
+        val result = apiWrapper {
             val movieResponse = apiService.getPopularMovies()
-            // // convert MovieResponse to MovieEntity and save in Room db
             val movieEntities = movieResponse.results.map { it.toEntity() }
             movieDao.deleteAllMovies()
             movieDao.insertMovies(movieEntities)
             movieResponse
-        }.also { result ->
-            if (result is ResultStates.Error) {
-                //In case of error , return last data saved in room db
-                val cachedMovies = movieDao.getAllMovies()
-                if (cachedMovies.isNotEmpty()) {
-                    return ResultStates.Success(
-                        MovieResponse(
-                            page = 1,
-                            results = cachedMovies.map {
-                                ResultMovie(
-                                    adult = false, // def
-                                    backdropPath = "", // def
-                                    genreIds = emptyList(), // def
-                                    id = it.id,
-                                    originalLanguage = "", // def
-                                    originalTitle = it.title,
-                                    overview = "", // def
-                                    popularity = 0.0, // def
-                                    posterPath = it.posterPath,
-                                    releaseDate = it.releaseDate,
-                                    title = it.title,
-                                    video = false, // def
-                                    voteAverage = it.voteAverage,
-                                    voteCount = 0 // def
-                                )
-                            },
-                            totalPages = 1,
-                            totalResults = cachedMovies.size
-                        )
+        }
+        emit(result)
+        if (result is ResultStates.Error) {
+            val cachedMovies = movieDao.getAllMovies()
+            if (cachedMovies.isNotEmpty()) {
+                emit(ResultStates.Success(
+                    MovieResponse(
+                        page = 1,
+                        results = cachedMovies.map {
+                            ResultMovie(
+                                adult = false,
+                                backdropPath = "",
+                                genreIds = emptyList(),
+                                id = it.id,
+                                originalLanguage = "",
+                                originalTitle = it.title,
+                                overview = "",
+                                popularity = 0.0,
+                                posterPath = it.posterPath,
+                                releaseDate = it.releaseDate,
+                                title = it.title,
+                                video = false,
+                                voteAverage = it.voteAverage,
+                                voteCount = 0
+                            )
+                        },
+                        totalPages = 1,
+                        totalResults = cachedMovies.size
                     )
-                }
+                ))
             }
         }
     }
 
-    suspend fun getMovieDetails(movieId: Int): ResultStates<ResultMovie> {
-        return apiWrapper {
-            apiService.getMovieDetails(movieId)
-        }
+
+    suspend fun getMovieDetails(movieId: Int): Flow<ResultStates<ResultMovie>> = flow {
+        emit(ResultStates.Loading)
+        val response = apiWrapper { apiService.getMovieDetails(movieId) }
+        emit(response)
     }
 
-    suspend fun getUpcomingMovies(): ResultStates<MovieResponse> {
-        return apiWrapper {
-            apiService.getUpcomingMovies()
-        }
+    suspend fun getUpcomingMovies(): Flow<ResultStates<MovieResponse>> = flow {
+        emit(ResultStates.Loading)
+        val response = apiWrapper { apiService.getUpcomingMovies() }
+        emit(response)
     }
 
 }

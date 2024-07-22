@@ -20,10 +20,11 @@ class MovieDetailViewModel @Inject constructor(
     val movieDetail: StateFlow<ResultStates<ResultMovie>> get() = _movieDetail
 
     fun fetchMovieDetails(movieId: Int) {
-        _movieDetail.value = ResultStates.Loading
         viewModelScope.launch {
-            val result = repository.getMovieDetails(movieId)
-            _movieDetail.value = result
+            repository.getMovieDetails(movieId)
+                .collect { result ->
+                    _movieDetail.value = result
+                }
         }
     }
 

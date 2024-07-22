@@ -19,11 +19,16 @@ class MovieViewModel @Inject constructor(
     private val _movies = MutableStateFlow<ResultStates<MovieResponse>>(ResultStates.Loading)
     val movies: StateFlow<ResultStates<MovieResponse>> get() = _movies
 
-    fun fetchPopularMovies() {
-        _movies.value = ResultStates.Loading
+    init {
+        fetchPopularMovies()
+    }
+
+    private fun fetchPopularMovies() {
         viewModelScope.launch {
-            val result = repository.getPopularMovies()
-            _movies.value = result
+            repository.getPopularMovies()
+                .collect { result ->
+                    _movies.value = result
+                }
         }
     }
 

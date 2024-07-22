@@ -43,10 +43,6 @@ fun PopularMovieListScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(Unit) {
-        viewModel.fetchPopularMovies()
-    }
-
     LaunchedEffect(moviesState) {
         if (moviesState is ResultStates.Error) {
             coroutineScope.launch {
