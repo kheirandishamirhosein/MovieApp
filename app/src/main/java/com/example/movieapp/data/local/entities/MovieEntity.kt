@@ -2,7 +2,7 @@ package com.example.movieapp.data.local.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.movieapp.data.remote.model.ResultMovie
+import com.example.movieapp.data.remote.model.movie.ResultMovie
 
 
 @Entity(tableName = "movies")

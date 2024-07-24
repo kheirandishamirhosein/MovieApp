@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.example.movieapp.data.local.dao.MovieDao
 import com.example.movieapp.data.local.database.MovieDb
 import com.example.movieapp.data.remote.api.MovieApiService
-import com.example.movieapp.data.repository.MovieRepository
+import com.example.movieapp.data.repository.Repository
 import com.example.movieapp.util.NetworkUtils
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -59,8 +59,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideMovieRepository(apiService: MovieApiService, movieDao: MovieDao): MovieRepository {
-        return MovieRepository(apiService, movieDao)
+    fun provideMovieRepository(apiService: MovieApiService, movieDao: MovieDao): Repository {
+        return Repository(apiService, movieDao)
     }
 
 }

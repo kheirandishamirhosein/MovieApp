@@ -1,4 +1,4 @@
-package com.example.movieapp.presentation.ui.navigation.popularMovie.movieList.compose
+package com.example.movieapp.presentation.ui.navigation.popularTv.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -23,11 +23,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.example.movieapp.data.remote.model.movie.ResultMovie
+import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun MovieItem(movie: ResultMovie, onClick: () -> Unit) {
+fun TVShowItem(tvShow: ResultTVShow, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -35,7 +35,7 @@ fun MovieItem(movie: ResultMovie, onClick: () -> Unit) {
             .clickable { onClick() }
     ) {
         Image(
-            painter = rememberImagePainter("https://image.tmdb.org/t/p/w500${movie.posterPath}"),
+            painter = rememberImagePainter("https://image.tmdb.org/t/p/w500${tvShow.posterPath}"),
             contentDescription = null,
             modifier = Modifier.size(100.dp),
             contentScale = ContentScale.Crop
@@ -43,12 +43,12 @@ fun MovieItem(movie: ResultMovie, onClick: () -> Unit) {
         Spacer(modifier = Modifier.width(8.dp))
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(
-                text = movie.title,
+                text = tvShow.name,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Text("Release Date: ${movie.releaseDate}")
+            Text("Release Date: ${tvShow.firstAirDate}")
             Spacer(modifier = Modifier.height(4.dp))
             Row {
                 Icon(
@@ -57,7 +57,7 @@ fun MovieItem(movie: ResultMovie, onClick: () -> Unit) {
                     tint = Color.Yellow
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                Text("Rating: ${movie.voteAverage}")
+                Text("Rating: ${tvShow.voteAverage}")
             }
         }
     }

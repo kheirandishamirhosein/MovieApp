@@ -38,7 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.example.movieapp.data.remote.model.ResultMovie
+import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.presentation.state.ResultStates
 import com.example.movieapp.presentation.ui.navigation.popularMovie.details.viewmodel.MovieDetailViewModel
 

@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.example.movieapp.data.remote.model.ResultMovie
+import com.example.movieapp.data.remote.model.movie.ResultMovie
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable

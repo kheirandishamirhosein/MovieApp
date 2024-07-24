@@ -1,4 +1,4 @@
-package com.example.movieapp.presentation.ui.navigation.uncoming.compose
+package com.example.movieapp.presentation.ui.navigation.popularTv.compose
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,16 +12,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.movieapp.data.remote.model.movie.MovieResponse
+import com.example.movieapp.data.remote.model.tvShow.TVShowResponse
 import com.example.movieapp.presentation.state.ResultStates
-import com.example.movieapp.presentation.ui.navigation.popularMovie.movieList.compose.MovieItem
-import com.example.movieapp.presentation.ui.navigation.uncoming.viewmodel.UpcomingMovieViewModel
+import com.example.movieapp.presentation.ui.navigation.popularTv.viewmodel.TVShowsViewModel
 
 @Composable
-fun UpcomingMoviesScreen(viewModel: UpcomingMovieViewModel = hiltViewModel()) {
-    val upcomingMovies by viewModel.upcomingMovies.collectAsState()
+fun PopularTvShowsListScreen(viewModel: TVShowsViewModel = hiltViewModel()) {
+    val popularTvShow by viewModel.tvShow.collectAsState()
 
-    when (upcomingMovies) {
+    when (popularTvShow) {
         is ResultStates.Loading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -32,16 +31,18 @@ fun UpcomingMoviesScreen(viewModel: UpcomingMovieViewModel = hiltViewModel()) {
         }
 
         is ResultStates.Success -> {
-            val movies = (upcomingMovies as ResultStates.Success<MovieResponse>).data.results
+            val tvShow = (popularTvShow as ResultStates.Success<TVShowResponse>).data.results
             LazyColumn {
-                items(movies) { movie ->
-                    MovieItem(movie = movie, onClick = { /* Handle click */ })
+                items(tvShow) { tv ->
+                    TVShowItem(tvShow = tv) {
+                        //TODO: For Navigate detail
+                    }
                 }
             }
         }
 
         is ResultStates.Error -> {
-            Text("Error: ${(upcomingMovies as ResultStates.Error).exception.message}")
+            Text("Error: ${(popularTvShow as ResultStates.Error).exception.message}")
         }
     }
 

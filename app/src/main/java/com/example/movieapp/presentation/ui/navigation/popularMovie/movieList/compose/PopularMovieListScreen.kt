@@ -26,8 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.movieapp.data.remote.model.MovieResponse
-import com.example.movieapp.data.remote.model.ResultMovie
+import com.example.movieapp.data.remote.model.movie.MovieResponse
+import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.presentation.state.ResultStates
 import com.example.movieapp.presentation.ui.navigation.popularMovie.movieList.viewmodel.MovieViewModel
 import kotlinx.coroutines.delay

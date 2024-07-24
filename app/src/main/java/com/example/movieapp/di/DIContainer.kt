@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.example.movieapp.data.local.database.MovieDb
 import com.example.movieapp.data.remote.api.MovieApiService
-import com.example.movieapp.data.repository.MovieRepository
+import com.example.movieapp.data.repository.Repository
 import com.example.movieapp.util.NetworkUtils
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -15,7 +15,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 object DIContainer {
 
     private lateinit var movieApiService: MovieApiService
-    private lateinit var movieRepository: MovieRepository
+    private lateinit var repository: Repository
     private lateinit var database: MovieDb
 
     fun init(application: Application) {
@@ -39,7 +39,7 @@ object DIContainer {
         ).build()
 
         // Initialize MovieRepository
-        movieRepository = MovieRepository(movieApiService, database.movieDao())
+        repository = Repository(movieApiService, database.movieDao())
 
 
     }
@@ -48,8 +48,8 @@ object DIContainer {
         return movieApiService
     }
 
-    fun provideMovieRepository(): MovieRepository {
-        return movieRepository
+    fun provideMovieRepository(): Repository {
+        return repository
     }
 
 }

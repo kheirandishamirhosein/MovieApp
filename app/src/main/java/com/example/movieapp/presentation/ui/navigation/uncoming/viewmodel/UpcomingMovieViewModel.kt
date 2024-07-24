@@ -2,8 +2,8 @@ package com.example.movieapp.presentation.ui.navigation.uncoming.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.movieapp.data.remote.model.MovieResponse
-import com.example.movieapp.data.repository.MovieRepository
+import com.example.movieapp.data.remote.model.movie.MovieResponse
+import com.example.movieapp.data.repository.Repository
 import com.example.movieapp.presentation.state.ResultStates
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UpcomingMovieViewModel @Inject constructor(
-    private val movieRepository: MovieRepository
+    private val repository: Repository
 ) : ViewModel() {
 
     private val _upcomingMovies =
@@ -26,7 +26,7 @@ class UpcomingMovieViewModel @Inject constructor(
 
     private fun fetchUpcomingMovies() {
         viewModelScope.launch {
-            movieRepository.getUpcomingMovies()
+            repository.getUpcomingMovies()
                 .collect { result ->
                     _upcomingMovies.value = result
                 }

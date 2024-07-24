@@ -2,8 +2,8 @@ package com.example.movieapp.presentation.ui.navigation.popularMovie.details.vie
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.movieapp.data.remote.model.ResultMovie
-import com.example.movieapp.data.repository.MovieRepository
+import com.example.movieapp.data.remote.model.movie.ResultMovie
+import com.example.movieapp.data.repository.Repository
 import com.example.movieapp.presentation.state.ResultStates
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MovieDetailViewModel @Inject constructor(
-    private val repository: MovieRepository
+    private val repository: Repository
 ) : ViewModel() {
 
     private val _movieDetail = MutableStateFlow<ResultStates<ResultMovie>>(ResultStates.Loading)
