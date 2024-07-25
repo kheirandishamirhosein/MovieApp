@@ -1,4 +1,4 @@
-package com.example.movieapp.presentation.ui.navigation.popularTv.viewmodel
+package com.example.movieapp.presentation.ui.navigation.tvShow.popular.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,10 +20,10 @@ class TVShowsViewModel @Inject constructor(
     val tvShow: StateFlow<ResultStates<TVShowResponse>> = _tvShow
 
     init {
-        fetchPopularTVShow()
+        fetchPopularTvShow()
     }
 
-    private fun fetchPopularTVShow() {
+    private fun fetchPopularTvShow() {
         viewModelScope.launch {
             repository.getPopularTVShows()
                 .collect { result ->
@@ -31,5 +31,4 @@ class TVShowsViewModel @Inject constructor(
                 }
         }
     }
-
 }
