@@ -29,7 +29,6 @@ import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.data.remote.model.tvShow.TVShowDetails
 import com.example.movieapp.data.remote.model.tvShow.TVShowResponse
 import com.example.movieapp.presentation.state.ResultStates
-import com.example.movieapp.presentation.ui.navigation.tvShow.lastest.LatestTVShowViewModel
 import com.example.movieapp.presentation.ui.navigation.tvShow.popular.viewmodel.TVShowsViewModel
 import kotlinx.coroutines.delay
 
@@ -37,10 +36,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun PopularTvShowsListScreen(
     tvShowsViewModel: TVShowsViewModel = hiltViewModel(),
-    latestTVShowViewModel: LatestTVShowViewModel = hiltViewModel()
 ) {
     val popularTvShows by tvShowsViewModel.tvShow.collectAsState()
-    val latestTVShowState by latestTVShowViewModel.latestTVShow.collectAsState()
 
     Scaffold(
         topBar = {
@@ -48,29 +45,6 @@ fun PopularTvShowsListScreen(
         },
         content = { paddingValues ->
             Column(modifier = Modifier.padding(paddingValues)) {
-
-
-                when (latestTVShowState) {
-                    is ResultStates.Loading -> {
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
-
-                    is ResultStates.Success -> {
-                        val latestTVShow =
-                            (latestTVShowState as ResultStates.Success<TVShowDetails>).data
-
-                        TVShowCarousel(tvShow = listOf(latestTVShow))
-                    }
-
-                    is ResultStates.Error -> {
-                        Text("Error: ${(latestTVShowState as ResultStates.Error).exception.message}")
-                    }
-                }
 
                 when (popularTvShows) {
                     is ResultStates.Loading -> {
@@ -86,6 +60,10 @@ fun PopularTvShowsListScreen(
                         val popularTvShowList =
                             (popularTvShows as ResultStates.Success<TVShowResponse>).data.results
 
+                        val topTVShow =
+                            popularTvShowList.sortedByDescending { it.voteAverage }.take(6)
+
+                        TVShowCarousel(tvShow = topTVShow)
                         TVShowList(tvShows = popularTvShowList)
                     }
 
@@ -113,7 +91,7 @@ fun TVShowList(tvShows: List<ResultTVShow>) {
 }
 
 @Composable
-fun TVShowCarousel(tvShow: List<TVShowDetails>) {
+fun TVShowCarousel(tvShow: List<ResultTVShow>) {
     var currentIndex by remember { mutableIntStateOf(0) }
     LaunchedEffect(currentIndex) {
         delay(5000)

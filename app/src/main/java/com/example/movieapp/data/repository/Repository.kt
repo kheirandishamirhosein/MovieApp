@@ -81,11 +81,4 @@ class Repository @Inject constructor(
         emit(response)
     }
 
-    suspend fun getLatestTVShows(): Flow<ResultStates<TVShowDetails>> = flow {
-        emit(ResultStates.Loading)
-        val response = apiWrapper { apiService.getLatestTVShows() }
-        emit(response)
-    }
-
-
 }

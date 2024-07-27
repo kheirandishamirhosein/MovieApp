@@ -31,11 +31,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.data.remote.model.tvShow.TVShowDetails
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun TVShowCard(tvShow: TVShowDetails) {
+fun TVShowCard(tvShow: ResultTVShow) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -48,7 +49,7 @@ fun TVShowCard(tvShow: TVShowDetails) {
                 .fillMaxSize()
                 .background(Color.Black.copy(alpha = 0.9f))
         ) {
-            val backdropPath = tvShow.backdropPath ?: "" // Use an empty string or a placeholder image URL
+            val backdropPath = tvShow.backdropPath ?: "default_backdrop_path.jpg" // a pic def for null backdrop path
             Image(
                 painter = rememberImagePainter("https://image.tmdb.org/t/p/w500$backdropPath"),
                 contentDescription = null,
@@ -66,7 +67,7 @@ fun TVShowCard(tvShow: TVShowDetails) {
                     .padding(end = 20.dp, top = 8.dp, bottom = 8.dp)
                     .clip(RoundedCornerShape(8.dp))
             ) {
-                val posterPath = tvShow.posterPath ?: "" // Use an empty string or a placeholder image URL
+                val posterPath = tvShow.posterPath ?: "default_poster_path.jpg" // a pic def for null poster path
                 Image(
                     painter = rememberImagePainter("https://image.tmdb.org/t/p/w500$posterPath"),
                     contentDescription = null,
