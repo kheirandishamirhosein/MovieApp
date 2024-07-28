@@ -1,4 +1,4 @@
-package com.example.movieapp.presentation.ui.navigation.tvShow.compose
+package com.example.movieapp.presentation.ui.navigation.tvShow.popular.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

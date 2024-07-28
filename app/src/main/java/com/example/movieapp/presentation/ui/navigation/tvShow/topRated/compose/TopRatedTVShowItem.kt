@@ -1,4 +1,4 @@
-package com.example.movieapp.presentation.ui.navigation.tvShow.compose
+package com.example.movieapp.presentation.ui.navigation.tvShow.topRated.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -26,11 +26,10 @@ import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
-import com.example.movieapp.data.remote.model.tvShow.TVShowDetails
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun TVShowItem(tvShow: ResultTVShow, onClick: () -> Unit) {
+fun TopRatedTVShowItem(tvShow: ResultTVShow, onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .width(150.dp)

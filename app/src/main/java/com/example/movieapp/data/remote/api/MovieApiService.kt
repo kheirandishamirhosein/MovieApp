@@ -4,6 +4,7 @@ import com.example.movieapp.data.remote.model.movie.MovieResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.data.remote.model.tvShow.TVShowDetails
 import com.example.movieapp.data.remote.model.tvShow.TVShowResponse
+import com.example.movieapp.data.remote.model.tvShow.topRated.TopRatedTVShowsResponse
 import com.example.movieapp.util.NetworkUtils
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -33,6 +34,13 @@ interface MovieApiService {
         @Query("language") language: String = "en-US",
         @Query("page") page: Int = 1
     ): TVShowResponse
+
+    @GET("tv/top_rated")
+    suspend fun getTopRatedTVShows(
+        @Query("api_key") apiKey: String = NetworkUtils.API_KEY,
+        @Query("language") language: String = "en-US",
+        @Query("page") page: Int = 1
+    ): TopRatedTVShowsResponse
 
     @GET("tv/{tv_id}")
     suspend fun getTVShowDetails(

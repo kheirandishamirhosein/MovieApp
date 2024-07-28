@@ -21,7 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.movieapp.presentation.ui.navigation.popularMovie.details.compose.DetailsPopularScreen
 import com.example.movieapp.presentation.ui.navigation.popularMovie.movieList.compose.PopularMovieListScreen
-import com.example.movieapp.presentation.ui.navigation.tvShow.compose.PopularTvShowsListScreen
+import com.example.movieapp.presentation.ui.navigation.tvShow.TvShowsListScreen
 import com.example.movieapp.presentation.ui.navigation.uncoming.compose.UpcomingMoviesScreen
 import com.example.movieapp.util.getIcons
 
@@ -43,7 +43,7 @@ fun BottomNavigationScreen() {
             NavHost(navController = navController, startDestination = items[0].route) {
                 composable(items[0].route) { PopularMovieListScreen(navController = navController) }
                 composable(items[1].route) { UpcomingMoviesScreen() }
-                composable(items[2].route) { PopularTvShowsListScreen() }
+                composable(items[2].route) { TvShowsListScreen() }
                 composable(
                     "movieDetail/{movieId}",
                     arguments = listOf(navArgument("movieId") { type = NavType.IntType })
