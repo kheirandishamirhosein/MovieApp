@@ -6,8 +6,8 @@ import com.example.movieapp.data.remote.api.MovieApiService
 import com.example.movieapp.data.remote.api.apiWrapper
 import com.example.movieapp.data.remote.model.movie.MovieResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
-import com.example.movieapp.data.remote.model.tvShow.TVShowDetails
-import com.example.movieapp.data.remote.model.tvShow.TVShowResponse
+import com.example.movieapp.data.remote.model.tvShow.onTheAir.OnTheAirTVShowsResponse
+import com.example.movieapp.data.remote.model.tvShow.popular.PopularTVShowResponse
 import com.example.movieapp.data.remote.model.tvShow.topRated.TopRatedTVShowsResponse
 import com.example.movieapp.presentation.state.ResultStates
 import kotlinx.coroutines.flow.Flow
@@ -76,7 +76,7 @@ class Repository @Inject constructor(
         emit(response)
     }
 
-    suspend fun getPopularTVShows(): Flow<ResultStates<TVShowResponse>> = flow {
+    suspend fun getPopularTVShows(): Flow<ResultStates<PopularTVShowResponse>> = flow {
         emit(ResultStates.Loading)
         val response = apiWrapper { apiService.getPopularTVShows() }
         emit(response)
@@ -87,5 +87,12 @@ class Repository @Inject constructor(
         val response = apiWrapper { apiService.getTopRatedTVShows() }
         emit(response)
     }
+
+    suspend fun getOnTheAirTVShows(): Flow<ResultStates<OnTheAirTVShowsResponse>> = flow {
+        emit(ResultStates.Loading)
+        val response = apiWrapper { apiService.getOnTheAirTVShows() }
+        emit(response)
+    }
+
 
 }

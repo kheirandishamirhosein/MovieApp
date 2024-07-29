@@ -1,4 +1,4 @@
-package com.example.movieapp.presentation.ui.navigation.tvShow.popular.compose
+package com.example.movieapp.presentation.ui.navigation.tvShow.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
-import com.example.movieapp.data.remote.model.tvShow.TVShowDetails
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable

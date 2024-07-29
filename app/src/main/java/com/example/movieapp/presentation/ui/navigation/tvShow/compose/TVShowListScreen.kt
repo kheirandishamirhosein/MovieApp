@@ -1,4 +1,4 @@
-package com.example.movieapp.presentation.ui.navigation.tvShow
+package com.example.movieapp.presentation.ui.navigation.tvShow.compose
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -29,25 +29,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
-import com.example.movieapp.data.remote.model.tvShow.TVShowResponse
+import com.example.movieapp.data.remote.model.tvShow.onTheAir.OnTheAirTVShowsResponse
+import com.example.movieapp.data.remote.model.tvShow.popular.PopularTVShowResponse
 import com.example.movieapp.data.remote.model.tvShow.topRated.TopRatedTVShowsResponse
 import com.example.movieapp.presentation.state.ResultStates
-import com.example.movieapp.presentation.ui.navigation.tvShow.popular.compose.TVShowCard
-import com.example.movieapp.presentation.ui.navigation.tvShow.popular.compose.TVShowItem
-import com.example.movieapp.presentation.ui.navigation.tvShow.popular.viewmodel.PopularTVShowsViewModel
-import com.example.movieapp.presentation.ui.navigation.tvShow.topRated.viewmodel.TopRatedTVShowsViewModel
+import com.example.movieapp.presentation.ui.navigation.tvShow.OnTheAirTVShowsViewModel
+import com.example.movieapp.presentation.ui.navigation.tvShow.PopularTVShowsViewModel
+import com.example.movieapp.presentation.ui.navigation.tvShow.TopRatedTVShowsViewModel
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TvShowsListScreen(
     popularTVShowsViewModel: PopularTVShowsViewModel = hiltViewModel(),
-    topRatedTVShowsViewModel: TopRatedTVShowsViewModel = hiltViewModel()
+    topRatedTVShowsViewModel: TopRatedTVShowsViewModel = hiltViewModel(),
+    onTheAirTVShowsViewModel: OnTheAirTVShowsViewModel = hiltViewModel()
 ) {
     val popularTvShows by popularTVShowsViewModel.tvShow.collectAsState()
     val topRatedTVShows by topRatedTVShowsViewModel.topRatedTVShow.collectAsState()
+    val onTheAirTVShow by onTheAirTVShowsViewModel.onTheAir.collectAsState()
     val isLoading =
-        popularTvShows is ResultStates.Loading && topRatedTVShows is ResultStates.Loading
+        popularTvShows is ResultStates.Loading &&
+                topRatedTVShows is ResultStates.Loading &&
+                onTheAirTVShow is ResultStates.Loading
 
     Scaffold(
         topBar = {
@@ -66,20 +70,39 @@ fun TvShowsListScreen(
                             CircularProgressIndicator()
                         }
                     } else {
+
+                        when (onTheAirTVShow) {
+                            is ResultStates.Success -> {
+                                val onTheAirTVShowList =
+                                    (onTheAirTVShow as ResultStates.Success<OnTheAirTVShowsResponse>).data.results
+                                val topOnTheAir =
+                                    onTheAirTVShowList.sortedByDescending { it.voteAverage }.take(10)
+                                TVShowCarousel(tvShow = topOnTheAir)
+                            }
+
+                            is ResultStates.Error -> {
+                                Text(text = "Error: ${(onTheAirTVShow as ResultStates.Error).exception.message}")
+                            }
+
+                            else -> {}
+                        }
+
                         when (popularTvShows) {
                             is ResultStates.Success -> {
                                 val popularTvShowList =
-                                    (popularTvShows as ResultStates.Success<TVShowResponse>).data.results
-                                val topTVShow =
-                                    popularTvShowList.sortedByDescending { it.voteAverage }.take(6)
+                                    (popularTvShows as ResultStates.Success<PopularTVShowResponse>).data.results
 
-                                TVShowCarousel(tvShow = topTVShow)
                                 Text(
                                     text = "Popular TV Shows",
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(top = 16.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
+                                        .padding(
+                                            top = 16.dp,
+                                            bottom = 8.dp,
+                                            start = 16.dp,
+                                            end = 16.dp
+                                        )
                                 )
                                 TVShowList(tvShows = popularTvShowList)
                             }
@@ -87,6 +110,7 @@ fun TvShowsListScreen(
                             is ResultStates.Error -> {
                                 Text("Error: ${(popularTvShows as ResultStates.Error).exception.message}")
                             }
+
                             else -> {}
                         }
 
@@ -100,7 +124,12 @@ fun TvShowsListScreen(
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(top = 16.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
+                                        .padding(
+                                            top = 16.dp,
+                                            bottom = 8.dp,
+                                            start = 16.dp,
+                                            end = 16.dp
+                                        )
                                 )
                                 TVShowList(tvShows = topRated)
                             }
@@ -108,8 +137,10 @@ fun TvShowsListScreen(
                             is ResultStates.Error -> {
                                 Text("Error: ${(topRatedTVShows as ResultStates.Error).exception.message}")
                             }
+
                             else -> {}
                         }
+
                     }
                 }
             }
