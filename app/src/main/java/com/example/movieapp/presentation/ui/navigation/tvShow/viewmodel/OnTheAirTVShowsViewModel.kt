@@ -1,4 +1,4 @@
-package com.example.movieapp.presentation.ui.navigation.tvShow
+package com.example.movieapp.presentation.ui.navigation.tvShow.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

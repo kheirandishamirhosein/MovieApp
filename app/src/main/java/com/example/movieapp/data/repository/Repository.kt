@@ -6,6 +6,7 @@ import com.example.movieapp.data.remote.api.MovieApiService
 import com.example.movieapp.data.remote.api.apiWrapper
 import com.example.movieapp.data.remote.model.movie.MovieResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
+import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.data.remote.model.tvShow.onTheAir.OnTheAirTVShowsResponse
 import com.example.movieapp.data.remote.model.tvShow.popular.PopularTVShowResponse
 import com.example.movieapp.data.remote.model.tvShow.topRated.TopRatedTVShowsResponse
@@ -98,6 +99,12 @@ class Repository @Inject constructor(
     suspend fun getTrendingTVShows(): Flow<ResultStates<TrendingTVShowsResponse>> = flow {
         emit(ResultStates.Loading)
         val response = apiWrapper { apiService.getTrendingTVShows() }
+        emit(response)
+    }
+
+    suspend fun getTVShowDetails(movieId: Int): Flow<ResultStates<ResultTVShow>> = flow {
+        emit(ResultStates.Loading)
+        val response = apiWrapper { apiService.getTVShowDetails(movieId) }
         emit(response)
     }
 

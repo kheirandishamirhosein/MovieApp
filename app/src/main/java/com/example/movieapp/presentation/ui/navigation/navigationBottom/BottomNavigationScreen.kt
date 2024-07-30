@@ -22,6 +22,7 @@ import androidx.navigation.navArgument
 import com.example.movieapp.presentation.ui.navigation.popularMovie.details.compose.DetailsPopularScreen
 import com.example.movieapp.presentation.ui.navigation.popularMovie.movieList.compose.PopularMovieListScreen
 import com.example.movieapp.presentation.ui.navigation.tvShow.compose.TvShowsListScreen
+import com.example.movieapp.presentation.ui.navigation.tvShow.details.compose.DetailsTVShowsScreen
 import com.example.movieapp.presentation.ui.navigation.uncoming.compose.UpcomingMoviesScreen
 import com.example.movieapp.util.getIcons
 
@@ -43,13 +44,20 @@ fun BottomNavigationScreen() {
             NavHost(navController = navController, startDestination = items[0].route) {
                 composable(items[0].route) { PopularMovieListScreen(navController = navController) }
                 composable(items[1].route) { UpcomingMoviesScreen() }
-                composable(items[2].route) { TvShowsListScreen() }
+                composable(items[2].route) { TvShowsListScreen(navController = navController) }
                 composable(
                     "movieDetail/{movieId}",
                     arguments = listOf(navArgument("movieId") { type = NavType.IntType })
                 ) { backStackEntry ->
                     val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
                     DetailsPopularScreen(navController, movieId)
+                }
+                composable(
+                    "tvShowsDetail/{tvShowId}",
+                    arguments = listOf(navArgument("tvShowId") { type = NavType.IntType })
+                ) { backStackEntry ->
+                    val tvShowId = backStackEntry.arguments?.getInt("tvShowId") ?: 0
+                    DetailsTVShowsScreen(navController = navController, movieId = tvShowId)
                 }
             }
         }

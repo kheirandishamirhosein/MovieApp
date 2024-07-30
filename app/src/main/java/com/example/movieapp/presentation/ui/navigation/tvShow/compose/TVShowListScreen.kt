@@ -28,21 +28,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.data.remote.model.tvShow.onTheAir.OnTheAirTVShowsResponse
 import com.example.movieapp.data.remote.model.tvShow.popular.PopularTVShowResponse
 import com.example.movieapp.data.remote.model.tvShow.topRated.TopRatedTVShowsResponse
 import com.example.movieapp.data.remote.model.tvShow.trending.TrendingTVShowsResponse
 import com.example.movieapp.presentation.state.ResultStates
-import com.example.movieapp.presentation.ui.navigation.tvShow.OnTheAirTVShowsViewModel
-import com.example.movieapp.presentation.ui.navigation.tvShow.PopularTVShowsViewModel
-import com.example.movieapp.presentation.ui.navigation.tvShow.TopRatedTVShowsViewModel
-import com.example.movieapp.presentation.ui.navigation.tvShow.TrendingTVShowsViewModel
+import com.example.movieapp.presentation.ui.navigation.tvShow.viewmodel.OnTheAirTVShowsViewModel
+import com.example.movieapp.presentation.ui.navigation.tvShow.viewmodel.PopularTVShowsViewModel
+import com.example.movieapp.presentation.ui.navigation.tvShow.viewmodel.TopRatedTVShowsViewModel
+import com.example.movieapp.presentation.ui.navigation.tvShow.viewmodel.TrendingTVShowsViewModel
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TvShowsListScreen(
+    navController: NavController,
     popularTVShowsViewModel: PopularTVShowsViewModel = hiltViewModel(),
     topRatedTVShowsViewModel: TopRatedTVShowsViewModel = hiltViewModel(),
     onTheAirTVShowsViewModel: OnTheAirTVShowsViewModel = hiltViewModel(),
@@ -111,7 +113,9 @@ fun TvShowsListScreen(
                                             end = 16.dp
                                         )
                                 )
-                                TVShowList(tvShows = trendingTVShowList)
+                                TVShowList(tvShows = trendingTVShowList) { tv ->
+                                    navController.navigate("tvShowsDetail/${tv.id}")
+                                }
                             }
 
                             is ResultStates.Error -> {
@@ -138,7 +142,9 @@ fun TvShowsListScreen(
                                             end = 16.dp
                                         )
                                 )
-                                TVShowList(tvShows = topRated)
+                                TVShowList(tvShows = topRated) { tv ->
+                                    navController.navigate("tvShowsDetail/${tv.id}")
+                                }
                             }
 
                             is ResultStates.Error -> {
@@ -165,7 +171,9 @@ fun TvShowsListScreen(
                                             end = 16.dp
                                         )
                                 )
-                                TVShowList(tvShows = popularTvShowList)
+                                TVShowList(tvShows = popularTvShowList) { tv ->
+                                    navController.navigate("tvShowsDetail/${tv.id}")
+                                }
                             }
 
                             is ResultStates.Error -> {
@@ -183,15 +191,13 @@ fun TvShowsListScreen(
 }
 
 @Composable
-fun TVShowList(tvShows: List<ResultTVShow>) {
+fun TVShowList(tvShows: List<ResultTVShow>, onItemClick: (ResultTVShow) -> Unit) {
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
         items(tvShows) { tv ->
-            TVShowItem(tvShow = tv) {
-                // TODO: For Navigate detail
-            }
+            TVShowItem(tvShow = tv, onClick = { onItemClick(tv) })
         }
     }
 }

@@ -2,6 +2,7 @@ package com.example.movieapp.data.remote.api
 
 import com.example.movieapp.data.remote.model.movie.MovieResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
+import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.data.remote.model.tvShow.onTheAir.OnTheAirTVShowsResponse
 import com.example.movieapp.data.remote.model.tvShow.popular.PopularTVShowResponse
 import com.example.movieapp.data.remote.model.tvShow.topRated.TopRatedTVShowsResponse
@@ -62,6 +63,6 @@ interface MovieApiService {
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String = NetworkUtils.API_KEY,
         @Query("language") language: String = "en-US"
-    )
+    ): ResultTVShow
 
 }
