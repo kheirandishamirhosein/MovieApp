@@ -9,6 +9,7 @@ import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.data.remote.model.tvShow.onTheAir.OnTheAirTVShowsResponse
 import com.example.movieapp.data.remote.model.tvShow.popular.PopularTVShowResponse
 import com.example.movieapp.data.remote.model.tvShow.topRated.TopRatedTVShowsResponse
+import com.example.movieapp.data.remote.model.tvShow.trending.TrendingTVShowsResponse
 import com.example.movieapp.presentation.state.ResultStates
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -94,5 +95,10 @@ class Repository @Inject constructor(
         emit(response)
     }
 
+    suspend fun getTrendingTVShows(): Flow<ResultStates<TrendingTVShowsResponse>> = flow {
+        emit(ResultStates.Loading)
+        val response = apiWrapper { apiService.getTrendingTVShows() }
+        emit(response)
+    }
 
 }
