@@ -5,13 +5,14 @@ import com.example.movieapp.data.remote.api.ApiService
 import com.example.movieapp.data.remote.model.movie.MovieResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.data.repository.Repository
+import com.example.movieapp.presentation.movie.details.MovieDetailViewModel
+import com.example.movieapp.presentation.movie.list.MovieViewModel
 import com.example.movieapp.presentation.state.ResultStates
-import com.example.movieapp.presentation.ui.navigation.popularMovie.details.viewmodel.MovieDetailViewModel
-import com.example.movieapp.presentation.ui.navigation.popularMovie.movieList.viewmodel.MovieViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestCoroutineScope
@@ -34,7 +35,7 @@ class RepositoryTest {
     private val repository = Repository(apiService)
 
     @Test
-    fun `getPopularMovies emits Loading, Success when api call is successful`() = runTest {
+    fun `getPopularMovies emits Success when api call is successful`() = runTest {
         // Mock the getPopularMovies method to return a successful response
         val movieResponse = MovieResponse(
             page = 1,
@@ -79,10 +80,7 @@ class RepositoryTest {
 
         // Use Turbine to test the Flow
         repository.getPopularMovies().test {
-            // Assert that Loading is emitted first
-            assertEquals(ResultStates.Loading, awaitItem())
-
-            // Assert that Success is emitted next with the expected data
+            // Assert that Success is emitted with the expected data
             assertEquals(
                 ResultStates.Success(movieResponse),
                 awaitItem()
@@ -93,18 +91,16 @@ class RepositoryTest {
         }
     }
 
+
     @Test
-    fun `getPopularMovies emits Loading, Error when api call fails`() = runTest {
+    fun `getPopularMovies emits Error when api call fails`() = runTest {
         // Mock the getPopularMovies method to throw an exception
         val exception = Exception("Mocked Exception")
         coEvery { apiService.getPopularMovies() } throws exception
 
         // Use Turbine to test the Flow
         repository.getPopularMovies().test {
-            // Assert that Loading is emitted first
-            assertEquals(ResultStates.Loading, awaitItem())
-
-            // Assert that Error is emitted next with the expected exception
+            // Assert that Error is emitted with the expected exception
             assertEquals(
                 ResultStates.Error(exception),
                 awaitItem()
@@ -114,6 +110,7 @@ class RepositoryTest {
             awaitComplete()
         }
     }
+
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -137,7 +134,7 @@ class MovieViewModelTest {
     }
 
     @Test
-    fun `fetchPopularMovies should emit Success state when repository returns data`(): Unit =
+    fun `fetchPopularMovies should emit Loading, Success when repository returns data`(): Unit =
         testScope.runTest {
             // Arrange
             val mockMovieResponse = MovieResponse(
@@ -164,11 +161,10 @@ class MovieViewModelTest {
                 totalResults = 1
             )
 
-            coEvery { repository.getPopularMovies() } returns flowOf(
-                ResultStates.Success(
-                    mockMovieResponse
-                )
-            )
+            coEvery { repository.getPopularMovies() } returns flow {
+                emit(ResultStates.Loading)
+                emit(ResultStates.Success(mockMovieResponse))
+            }
 
             // Act & Assert
             viewModel.movies.test {
@@ -179,14 +175,14 @@ class MovieViewModelTest {
         }
 
     @Test
-    fun `fetchPopularMovies should emit Error state when repository returns an error`(): Unit =
+    fun `fetchPopularMovies should emit Loading, Error when repository returns an error`(): Unit =
         testScope.runTest {
             // Arrange
             val exception = Exception("Network error")
-            coEvery { repository.getPopularMovies() } returns flowOf(
-                ResultStates.Loading,
-                ResultStates.Error(exception)
-            )
+            coEvery { repository.getPopularMovies() } returns flow {
+                emit(ResultStates.Loading)
+                emit(ResultStates.Error(exception))
+            }
 
             // Act & Assert
             viewModel.movies.test {
@@ -195,6 +191,7 @@ class MovieViewModelTest {
                 cancelAndIgnoreRemainingEvents()
             }
         }
+
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -218,7 +215,7 @@ class MovieDetailViewModelTest {
     }
 
     @Test
-    fun `fetchMovieDetails should emit Success state when repository returns data`() =
+    fun `fetchMovieDetails should emit Loading and Success state when repository returns data`() =
         testScope.runTest {
             // Arrange
             val movieId = 1
@@ -240,37 +237,44 @@ class MovieDetailViewModelTest {
             )
 
             coEvery { repository.getMovieDetails(movieId) } returns flowOf(
-                ResultStates.Success(
-                    mockResultMovie
-                )
+                ResultStates.Success(mockResultMovie)
             )
 
-            // Act & Assert
+            // Act
             viewModel.fetchMovieDetails(movieId)
+
+            // Assert
             viewModel.movieDetail.test {
+                // Assert Loading state
                 assertEquals(ResultStates.Loading, awaitItem())
+                // Assert Success state with expected data
                 assertEquals(ResultStates.Success(mockResultMovie), awaitItem())
                 cancelAndIgnoreRemainingEvents()
             }
         }
 
     @Test
-    fun `fetchMovieDetails should emit Error state when repository returns an error`() =
+    fun `fetchMovieDetails should emit Loading and Error state when repository returns an error`() =
         testScope.runTest {
             // Arrange
             val movieId = 1
             val exception = Exception("Network error")
             coEvery { repository.getMovieDetails(movieId) } returns flowOf(
-                ResultStates.Loading,
                 ResultStates.Error(exception)
             )
 
-            // Act & Assert
+            // Act
             viewModel.fetchMovieDetails(movieId)
+
+            // Assert
             viewModel.movieDetail.test {
+                // Assert Loading state
                 assertEquals(ResultStates.Loading, awaitItem())
+                // Assert Error state with expected exception
                 assertTrue(awaitItem() is ResultStates.Error)
                 cancelAndIgnoreRemainingEvents()
             }
         }
+
+
 }

@@ -1,7 +1,7 @@
 package com.example.movieapp.data.repository
 
 import com.example.movieapp.data.remote.api.ApiService
-import com.example.movieapp.data.remote.api.apiWrapper
+import com.example.movieapp.util.apiWrapper
 import com.example.movieapp.data.remote.model.movie.MovieResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
