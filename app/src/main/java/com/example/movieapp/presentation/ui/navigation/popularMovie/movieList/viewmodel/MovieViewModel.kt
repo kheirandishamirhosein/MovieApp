@@ -23,7 +23,7 @@ class MovieViewModel @Inject constructor(
         fetchPopularMovies()
     }
 
-    private fun fetchPopularMovies() {
+    fun fetchPopularMovies() {
         viewModelScope.launch {
             repository.getPopularMovies()
                 .collect { result ->

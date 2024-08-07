@@ -68,6 +68,28 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    // Test
+    // AndroidX Test
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    testImplementation("org.slf4j:slf4j-simple:2.0.0")
+
+    // Hilt
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.50")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.50")
+
+    // MockK
+    testImplementation("io.mockk:mockk:1.13.5")
+
+    // Turbine (for testing StateFlow)
+    testImplementation("app.cash.turbine:turbine:0.12.1")
+
+    // Coroutines
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
+
+    // JUnit
+    testImplementation("junit:junit:4.13.2")
+
 
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

@@ -12,7 +12,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface MovieApiService {
+interface ApiService {
 
     @GET("movie/popular")
     suspend fun getPopularMovies(
