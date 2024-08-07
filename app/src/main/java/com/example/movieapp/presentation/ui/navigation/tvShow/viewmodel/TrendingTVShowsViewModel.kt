@@ -26,6 +26,7 @@ class TrendingTVShowsViewModel @Inject constructor(
 
     private fun fetchTrendingTVShow() {
         viewModelScope.launch {
+            _trending.value = ResultStates.Loading
             repository.getTrendingTVShows()
                 .collect { result ->
                     _trending.value = result

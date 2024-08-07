@@ -16,7 +16,8 @@ class PopularTVShowsViewModel @Inject constructor(
     val repository: Repository
 ) : ViewModel() {
 
-    private val _tvShow = MutableStateFlow<ResultStates<PopularTVShowResponse>>(ResultStates.Loading)
+    private val _tvShow =
+        MutableStateFlow<ResultStates<PopularTVShowResponse>>(ResultStates.Loading)
     val tvShow: StateFlow<ResultStates<PopularTVShowResponse>> = _tvShow
 
     init {
@@ -25,6 +26,7 @@ class PopularTVShowsViewModel @Inject constructor(
 
     private fun fetchPopularTvShow() {
         viewModelScope.launch {
+            _tvShow.value = ResultStates.Loading
             repository.getPopularTVShows()
                 .collect { result ->
                     _tvShow.value = result

@@ -23,8 +23,9 @@ class MovieViewModel @Inject constructor(
         fetchPopularMovies()
     }
 
-    fun fetchPopularMovies() {
+    private fun fetchPopularMovies() {
         viewModelScope.launch {
+            _movies.value = ResultStates.Loading
             repository.getPopularMovies()
                 .collect { result ->
                     _movies.value = result

@@ -26,6 +26,7 @@ class TopRatedTVShowsViewModel @Inject constructor(
 
     private fun fetchTopRatedTVShows() {
         viewModelScope.launch {
+            _topRatedTVShow.value = ResultStates.Loading
             repository.getTopRatedTVShows()
                 .collect { result ->
                     _topRatedTVShow.value = result

@@ -26,6 +26,7 @@ class UpcomingMovieViewModel @Inject constructor(
 
     private fun fetchUpcomingMovies() {
         viewModelScope.launch {
+            _upcomingMovies.value = ResultStates.Loading
             repository.getUpcomingMovies()
                 .collect { result ->
                     _upcomingMovies.value = result

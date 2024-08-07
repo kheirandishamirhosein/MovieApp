@@ -21,6 +21,7 @@ class MovieDetailViewModel @Inject constructor(
 
     fun fetchMovieDetails(movieId: Int) {
         viewModelScope.launch {
+            _movieDetail.value = ResultStates.Loading
             repository.getMovieDetails(movieId)
                 .collect { result ->
                     _movieDetail.value = result

@@ -21,6 +21,7 @@ class DetailsTVShowsViewModel @Inject constructor(
 
     fun fetchDetailTVShows(movieId: Int) {
         viewModelScope.launch {
+            _detailsTVShow.value = ResultStates.Loading
             repository.getTVShowDetails(movieId)
                 .collect { result ->
                     _detailsTVShow.value = result

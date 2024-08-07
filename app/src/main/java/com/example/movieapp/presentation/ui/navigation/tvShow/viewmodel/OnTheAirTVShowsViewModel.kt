@@ -26,6 +26,7 @@ class OnTheAirTVShowsViewModel @Inject constructor(
 
     private fun fetchOnTheAirTVShows() {
         viewModelScope.launch {
+            _onTheAir.value = ResultStates.Loading
             repository.getOnTheAirTVShows()
                 .collect { result ->
                     _onTheAir.value = result
