@@ -10,10 +10,14 @@ import com.example.movieapp.presentation.movie.list.MovieViewModel
 import com.example.movieapp.presentation.state.ResultStates
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.resetMain
@@ -26,6 +30,7 @@ import org.junit.Test
 import org.junit.Assert.*
 import org.junit.Before
 
+// class test Repository
 class RepositoryTest {
 
     // Mock ApiService
@@ -113,6 +118,7 @@ class RepositoryTest {
 
 }
 
+// class test Movie list ViewModel
 @OptIn(ExperimentalCoroutinesApi::class)
 class MovieViewModelTest {
 
@@ -194,6 +200,7 @@ class MovieViewModelTest {
 
 }
 
+// class test Movie Detail ViewModel
 @OptIn(ExperimentalCoroutinesApi::class)
 class MovieDetailViewModelTest {
 
@@ -279,3 +286,31 @@ class MovieDetailViewModelTest {
 
 }
 
+// class test CoroutineExceptionHandler
+
+class CoroutineExceptionHandlerTest {
+
+    @Test
+    fun `test CoroutineExceptionHandler catches exception`() = runBlocking {
+        // Variable to hold the exception caught by CoroutineExceptionHandler
+        var caughtException: Throwable? = null
+        // Define CoroutineExceptionHandler
+        val exceptionHandler = CoroutineExceptionHandler { _, exception ->
+            caughtException = exception
+        }
+        // Launch a Coroutine that will throw an exception
+        val job = CoroutineScope(Dispatchers.Default + exceptionHandler).launch {
+            throw RuntimeException("Test Exception")
+        }
+        // Wait for the Coroutine to complete
+        job.join()
+        // Assert that the exception was caught by CoroutineExceptionHandler
+        assertNotNull("Exception should have been caught", caughtException)
+        assertTrue(
+            "Caught exception should be of type RuntimeException",
+            caughtException is RuntimeException
+        )
+        assertEquals("Test Exception", caughtException?.message)
+    }
+
+}
