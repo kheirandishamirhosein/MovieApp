@@ -39,22 +39,8 @@ fun PopularMovieListScreen(
     viewModel: MovieViewModel = hiltViewModel()
 ) {
     val moviesState by viewModel.movies.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
-
-    LaunchedEffect(moviesState) {
-        if (moviesState is ResultStates.Error) {
-            coroutineScope.launch {
-                snackbarHostState.showSnackbar(
-                    message = "Error: ${(moviesState as ResultStates.Error).exception.message ?: "Unknown error"}",
-                    duration = SnackbarDuration.Short
-                )
-            }
-        }
-    }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(title = { Text(text = "Popular Movies") })
         },
