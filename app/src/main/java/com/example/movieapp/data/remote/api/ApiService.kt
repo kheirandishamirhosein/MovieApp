@@ -15,45 +15,36 @@ import retrofit2.http.Query
 interface ApiService {
 
     @GET("movie/popular")
-    suspend fun getPopularMovies(
-        @Query("api_key") apiKey: String = NetworkUtils.API_KEY
-    ): MovieResponse
+    suspend fun getPopularMovies(): MovieResponse
 
     @GET("movie/{movie_id}")
     suspend fun getMovieDetails(
         @Path("movie_id") movieId: Int,
-        @Query("api_key") apiKey: String = NetworkUtils.API_KEY
     ): ResultMovie
 
     @GET("movie/upcoming")
-    suspend fun getUpcomingMovies(
-        @Query("api_key") apiKey: String = NetworkUtils.API_KEY
-    ): MovieResponse
+    suspend fun getUpcomingMovies(): MovieResponse
 
     @GET("tv/popular")
     suspend fun getPopularTVShows(
-        @Query("api_key") apiKey: String = NetworkUtils.API_KEY,
         @Query("language") language: String = "en-US",
         @Query("page") page: Int = 1
     ): PopularTVShowResponse
 
     @GET("tv/top_rated")
     suspend fun getTopRatedTVShows(
-        @Query("api_key") apiKey: String = NetworkUtils.API_KEY,
         @Query("language") language: String = "en-US",
         @Query("page") page: Int = 1
     ): TopRatedTVShowsResponse
 
     @GET("tv/on_the_air")
     suspend fun getOnTheAirTVShows(
-        @Query("api_key") apiKey: String = NetworkUtils.API_KEY,
         @Query("language") language: String = "en-US",
         @Query("page") page: Int = 1
     ): OnTheAirTVShowsResponse
 
     @GET("trending/tv/week")
     suspend fun getTrendingTVShows(
-        @Query("api_key") apiKey: String = NetworkUtils.API_KEY,
         @Query("language") language: String = "en-US",
         @Query("page") page: Int = 1
     ): TrendingTVShowsResponse
@@ -61,7 +52,6 @@ interface ApiService {
     @GET("tv/{tv_id}")
     suspend fun getTVShowDetails(
         @Path("tv_id") tvId: Int,
-        @Query("api_key") apiKey: String = NetworkUtils.API_KEY,
         @Query("language") language: String = "en-US"
     ): ResultTVShow
 

@@ -1,7 +1,8 @@
 package com.example.movieapp.di
 
 import com.example.movieapp.data.remote.api.ApiService
-import com.example.movieapp.data.repository.Repository
+import com.example.movieapp.data.remote.interceptor.ApiKeyInterceptor
+import com.example.movieapp.data.repository.RepositoryImp
 import com.example.movieapp.util.NetworkUtils
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -9,6 +10,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
@@ -19,7 +21,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit {
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(NetworkUtils.BASE_URL)
             .addConverterFactory(
@@ -27,6 +29,7 @@ class AppModule {
                     Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
                 )
             )
+            .client(okHttpClient)
             .build()
     }
 
@@ -38,8 +41,16 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideMovieRepository(apiService: ApiService): Repository {
-        return Repository(apiService)
+    fun provideMovieRepository(apiService: ApiService): RepositoryImp {
+        return RepositoryImp(apiService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient{
+        return OkHttpClient.Builder()
+            .addInterceptor(ApiKeyInterceptor())
+            .build()
     }
 
 }
