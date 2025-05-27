@@ -7,7 +7,6 @@ import com.example.movieapp.data.remote.model.tvShow.onTheAir.OnTheAirTVShowsRes
 import com.example.movieapp.data.remote.model.tvShow.popular.PopularTVShowResponse
 import com.example.movieapp.data.remote.model.tvShow.topRated.TopRatedTVShowsResponse
 import com.example.movieapp.data.remote.model.tvShow.trending.TrendingTVShowsResponse
-import com.example.movieapp.util.NetworkUtils
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

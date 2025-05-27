@@ -21,6 +21,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("String", "API_KEY", "\"${property("TMDB_API_KEY")}\"")
+        buildConfigField("String", "BASE_URL", "\"${property("TMDB_BASE_URL")}\"")
     }
 
     buildTypes {
@@ -40,6 +42,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {

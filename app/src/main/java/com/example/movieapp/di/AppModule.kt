@@ -1,9 +1,9 @@
 package com.example.movieapp.di
 
+import com.example.movieapp.BuildConfig
 import com.example.movieapp.data.remote.api.ApiService
 import com.example.movieapp.data.remote.interceptor.ApiKeyInterceptor
 import com.example.movieapp.data.repository.RepositoryImp
-import com.example.movieapp.util.NetworkUtils
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -23,7 +23,7 @@ class AppModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(NetworkUtils.BASE_URL)
+            .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(
                 MoshiConverterFactory.create(
                     Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
