@@ -3,7 +3,7 @@ package com.example.movieapp.presentation.tv.details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
-import com.example.movieapp.data.repository.Repository
+import com.example.movieapp.data.repository.RepositoryImp
 import com.example.movieapp.presentation.state.ResultStates
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailsTVShowsViewModel @Inject constructor(
-    val repository: Repository
+    val repositoryImp: RepositoryImp
 ) : ViewModel() {
 
     private val _detailsTVShow = MutableStateFlow<ResultStates<ResultTVShow>>(ResultStates.Loading)
@@ -22,7 +22,7 @@ class DetailsTVShowsViewModel @Inject constructor(
     fun fetchDetailTVShows(movieId: Int) {
         viewModelScope.launch {
             _detailsTVShow.value = ResultStates.Loading
-            repository.getTVShowDetails(movieId)
+            repositoryImp.getTVShowDetails(movieId)
                 .collect { result ->
                     _detailsTVShow.value = result
                 }

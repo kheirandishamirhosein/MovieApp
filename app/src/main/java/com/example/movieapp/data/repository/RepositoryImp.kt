@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class Repository @Inject constructor(
+class RepositoryImp @Inject constructor(
     private val apiService: ApiService
 ) {
 

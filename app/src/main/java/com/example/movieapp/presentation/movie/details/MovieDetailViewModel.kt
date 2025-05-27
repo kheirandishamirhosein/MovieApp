@@ -3,7 +3,7 @@ package com.example.movieapp.presentation.movie.details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.data.remote.model.movie.ResultMovie
-import com.example.movieapp.data.repository.Repository
+import com.example.movieapp.data.repository.RepositoryImp
 import com.example.movieapp.presentation.state.ResultStates
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MovieDetailViewModel @Inject constructor(
-    private val repository: Repository
+    private val repositoryImp: RepositoryImp
 ) : ViewModel() {
 
     private val _movieDetail = MutableStateFlow<ResultStates<ResultMovie>>(ResultStates.Loading)
@@ -22,7 +22,7 @@ class MovieDetailViewModel @Inject constructor(
     fun fetchMovieDetails(movieId: Int) {
         viewModelScope.launch {
             _movieDetail.value = ResultStates.Loading
-            repository.getMovieDetails(movieId)
+            repositoryImp.getMovieDetails(movieId)
                 .collect { result ->
                     _movieDetail.value = result
                 }

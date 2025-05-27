@@ -3,7 +3,7 @@ package com.example.movieapp.presentation.tv.lists
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.data.remote.model.tvShow.trending.TrendingTVShowsResponse
-import com.example.movieapp.data.repository.Repository
+import com.example.movieapp.data.repository.RepositoryImp
 import com.example.movieapp.presentation.state.ResultStates
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TrendingTVShowsViewModel @Inject constructor(
-    val repository: Repository
+    val repositoryImp: RepositoryImp
 ) : ViewModel() {
 
     private val _trending =
@@ -27,7 +27,7 @@ class TrendingTVShowsViewModel @Inject constructor(
     private fun fetchTrendingTVShow() {
         viewModelScope.launch {
             _trending.value = ResultStates.Loading
-            repository.getTrendingTVShows()
+            repositoryImp.getTrendingTVShows()
                 .collect { result ->
                     _trending.value = result
                 }
