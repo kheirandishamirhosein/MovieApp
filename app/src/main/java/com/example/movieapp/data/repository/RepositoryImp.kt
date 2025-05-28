@@ -9,6 +9,7 @@ import com.example.movieapp.data.remote.model.tvShow.onTheAir.OnTheAirTVShowsRes
 import com.example.movieapp.data.remote.model.tvShow.popular.PopularTVShowResponse
 import com.example.movieapp.data.remote.model.tvShow.topRated.TopRatedTVShowsResponse
 import com.example.movieapp.data.remote.model.tvShow.trending.TrendingTVShowsResponse
+import com.example.movieapp.domain.repository.Repository
 import com.example.movieapp.presentation.state.ResultStates
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -16,46 +17,38 @@ import javax.inject.Inject
 
 class RepositoryImp @Inject constructor(
     private val apiService: ApiService
-) {
+) : Repository{
 
-    suspend fun getPopularMovies(): Flow<ResultStates<MovieResponse>> = flow {
-        val response = apiWrapper { apiService.getPopularMovies() }
-        emit(response)
+    override suspend fun getPopularMovies(): ResultStates<List<ResultMovie>> {
+        return apiWrapper { apiService.getPopularMovies().results }
     }
 
-    suspend fun getMovieDetails(movieId: Int): Flow<ResultStates<ResultMovie>> = flow {
-        val response = apiWrapper { apiService.getMovieDetails(movieId) }
-        emit(response)
+    override suspend fun getMovieDetails(movieId: Int): ResultStates<ResultMovie> {
+        return apiWrapper { apiService.getMovieDetails(movieId) }
     }
 
-    suspend fun getUpcomingMovies(): Flow<ResultStates<MovieResponse>> = flow {
-        val response = apiWrapper { apiService.getUpcomingMovies() }
-        emit(response)
+    override suspend fun getUpcomingMovies(): ResultStates<List<ResultMovie>> {
+        return apiWrapper { apiService.getUpcomingMovies().results }
     }
 
-    suspend fun getPopularTVShows(): Flow<ResultStates<PopularTVShowResponse>> = flow {
-        val response = apiWrapper { apiService.getPopularTVShows() }
-        emit(response)
+    override suspend fun getPopularTVShows(): ResultStates<List<ResultTVShow>> {
+        return apiWrapper { apiService.getPopularTVShows().results }
     }
 
-    suspend fun getTopRatedTVShows(): Flow<ResultStates<TopRatedTVShowsResponse>> = flow {
-        val response = apiWrapper { apiService.getTopRatedTVShows() }
-        emit(response)
+    override suspend fun getTopRatedTVShows(): ResultStates<List<ResultTVShow>> {
+        return apiWrapper { apiService.getTopRatedTVShows().results }
     }
 
-    suspend fun getOnTheAirTVShows(): Flow<ResultStates<OnTheAirTVShowsResponse>> = flow {
-        val response = apiWrapper { apiService.getOnTheAirTVShows() }
-        emit(response)
+    override suspend fun getOnTheAirTVShows(): ResultStates<List<ResultTVShow>> {
+        return apiWrapper { apiService.getOnTheAirTVShows().results }
     }
 
-    suspend fun getTrendingTVShows(): Flow<ResultStates<TrendingTVShowsResponse>> = flow {
-        val response = apiWrapper { apiService.getTrendingTVShows() }
-        emit(response)
+    override suspend fun getTrendingTVShows(): ResultStates<List<ResultTVShow>> {
+        return apiWrapper { apiService.getTrendingTVShows().results }
     }
 
-    suspend fun getTVShowDetails(movieId: Int): Flow<ResultStates<ResultTVShow>> = flow {
-        val response = apiWrapper { apiService.getTVShowDetails(movieId) }
-        emit(response)
+    override suspend fun getTVShowDetails(tvId: Int): ResultStates<ResultTVShow> {
+        return apiWrapper { apiService.getTVShowDetails(tvId) }
     }
 
 }

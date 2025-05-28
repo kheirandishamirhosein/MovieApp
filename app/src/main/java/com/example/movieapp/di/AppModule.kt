@@ -4,6 +4,7 @@ import com.example.movieapp.BuildConfig
 import com.example.movieapp.data.remote.api.ApiService
 import com.example.movieapp.data.remote.interceptor.ApiKeyInterceptor
 import com.example.movieapp.data.repository.RepositoryImp
+import com.example.movieapp.domain.repository.Repository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -41,9 +42,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideMovieRepository(apiService: ApiService): RepositoryImp {
-        return RepositoryImp(apiService)
-    }
+    fun provideRepository(repositoryImp: RepositoryImp): Repository = repositoryImp
 
     @Provides
     @Singleton
