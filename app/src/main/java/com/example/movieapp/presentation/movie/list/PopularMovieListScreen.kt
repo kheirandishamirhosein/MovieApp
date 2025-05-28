@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.movieapp.data.remote.model.movie.MovieResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.presentation.state.ResultStates
 import kotlinx.coroutines.delay
@@ -33,7 +32,11 @@ fun PopularMovieListScreen(
     navController: NavController,
     viewModel: MovieViewModel = hiltViewModel()
 ) {
-    val moviesState by viewModel.movies.collectAsState()
+    val moviesState by viewModel.popularMoviesState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(MovieUiEvent.LoadPopularMovies)
+    }
 
     Scaffold(
         topBar = {
@@ -41,6 +44,7 @@ fun PopularMovieListScreen(
         },
         content = { paddingValues ->
             Column(modifier = Modifier.padding(paddingValues)) {
+
                 when (moviesState) {
                     is ResultStates.Loading -> {
                         Box(
@@ -52,10 +56,8 @@ fun PopularMovieListScreen(
                     }
 
                     is ResultStates.Success -> {
-                        val movies =
-                            (moviesState as ResultStates.Success<MovieResponse>).data.results
-                        val topMovies =
-                            movies.sortedByDescending { it.voteAverage }.take(6)
+                        val movies = (moviesState as ResultStates.Success).data
+                        val topMovies = movies.sortedByDescending { it.voteAverage }.take(6)
 
                         MovieCarousel(movies = topMovies)
                         MovieList(movies = movies) { movie ->
@@ -66,12 +68,13 @@ fun PopularMovieListScreen(
                     is ResultStates.Error -> {
                         Box(
                             modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.TopCenter
+                            contentAlignment = Alignment.Center
                         ) {
                             Text("Error: ${(moviesState as ResultStates.Error).exception.message}")
                         }
                     }
                 }
+
             }
         }
     )

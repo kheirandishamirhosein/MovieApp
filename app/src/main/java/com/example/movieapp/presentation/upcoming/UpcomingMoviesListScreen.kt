@@ -13,12 +13,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.movieapp.data.remote.model.movie.MovieResponse
+import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.presentation.movie.list.MovieItem
 import com.example.movieapp.presentation.state.ResultStates
 
 @Composable
 fun UpcomingMoviesScreen(viewModel: UpcomingMovieViewModel = hiltViewModel()) {
-    val upcomingMovies by viewModel.upcomingMovies.collectAsState()
+    val upcomingMovies by viewModel.upcomingMoviesState.collectAsState()
 
     when (upcomingMovies) {
         is ResultStates.Loading -> {
@@ -31,7 +32,7 @@ fun UpcomingMoviesScreen(viewModel: UpcomingMovieViewModel = hiltViewModel()) {
         }
 
         is ResultStates.Success -> {
-            val movies = (upcomingMovies as ResultStates.Success<MovieResponse>).data.results
+            val movies = (upcomingMovies as ResultStates.Success<List<ResultMovie>>).data
             LazyColumn {
                 items(movies) { movie ->
                     MovieItem(movie = movie, onClick = { /* Handle click */ })

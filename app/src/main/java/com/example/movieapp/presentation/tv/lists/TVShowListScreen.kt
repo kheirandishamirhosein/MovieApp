@@ -30,26 +30,28 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
-import com.example.movieapp.data.remote.model.tvShow.onTheAir.OnTheAirTVShowsResponse
-import com.example.movieapp.data.remote.model.tvShow.popular.PopularTVShowResponse
-import com.example.movieapp.data.remote.model.tvShow.topRated.TopRatedTVShowsResponse
-import com.example.movieapp.data.remote.model.tvShow.trending.TrendingTVShowsResponse
 import com.example.movieapp.presentation.state.ResultStates
+import com.example.movieapp.presentation.tv.TvShowViewModel
+import com.example.movieapp.presentation.tv.TvShowsUiEvent
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TvShowsListScreen(
     navController: NavController,
-    popularTVShowsViewModel: PopularTVShowsViewModel = hiltViewModel(),
-    topRatedTVShowsViewModel: TopRatedTVShowsViewModel = hiltViewModel(),
-    onTheAirTVShowsViewModel: OnTheAirTVShowsViewModel = hiltViewModel(),
-    trendingTVShowsViewModel: TrendingTVShowsViewModel = hiltViewModel()
+    viewModel: TvShowViewModel = hiltViewModel(),
 ) {
-    val popularTvShows by popularTVShowsViewModel.tvShow.collectAsState()
-    val topRatedTVShows by topRatedTVShowsViewModel.topRatedTVShow.collectAsState()
-    val onTheAirTVShows by onTheAirTVShowsViewModel.onTheAir.collectAsState()
-    val trendingTVShows by trendingTVShowsViewModel.trending.collectAsState()
+    val popularTvShows by viewModel.popularTVShows.collectAsState()
+    val topRatedTVShows by viewModel.topRatedTVShows.collectAsState()
+    val onTheAirTVShows by viewModel.onTheAirTVShows.collectAsState()
+    val trendingTVShows by viewModel.trendingTVShows.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(TvShowsUiEvent.LoadPopularTvShows)
+        viewModel.onEvent(TvShowsUiEvent.LoadTopRatedTVShows)
+        viewModel.onEvent(TvShowsUiEvent.LoadTrendingTVShows)
+        viewModel.onEvent(TvShowsUiEvent.LoadOnTheAirTVShows)
+    }
 
     val isLoading =
         popularTvShows is ResultStates.Loading &&
@@ -78,7 +80,7 @@ fun TvShowsListScreen(
                         when (onTheAirTVShows) {
                             is ResultStates.Success -> {
                                 val onTheAirTVShowList =
-                                    (onTheAirTVShows as ResultStates.Success<OnTheAirTVShowsResponse>).data.results
+                                    (onTheAirTVShows as ResultStates.Success<List<ResultTVShow>>).data
                                 val topOnTheAir =
                                     onTheAirTVShowList.sortedByDescending { it.voteAverage }
                                         .take(10)
@@ -95,7 +97,7 @@ fun TvShowsListScreen(
                         when (trendingTVShows) {
                             is ResultStates.Success -> {
                                 val trendingTVShowList =
-                                    (trendingTVShows as ResultStates.Success<TrendingTVShowsResponse>).data.results
+                                    (trendingTVShows as ResultStates.Success<List<ResultTVShow>>).data
 
                                 Text(
                                     text = "Trending TV Shows",
@@ -124,7 +126,7 @@ fun TvShowsListScreen(
                         when (topRatedTVShows) {
                             is ResultStates.Success -> {
                                 val topRated =
-                                    (topRatedTVShows as ResultStates.Success<TopRatedTVShowsResponse>).data.results
+                                    (topRatedTVShows as ResultStates.Success<List<ResultTVShow>>).data
 
                                 Text(
                                     text = "Top Rated TV Shows",
@@ -153,7 +155,7 @@ fun TvShowsListScreen(
                         when (popularTvShows) {
                             is ResultStates.Success -> {
                                 val popularTvShowList =
-                                    (popularTvShows as ResultStates.Success<PopularTVShowResponse>).data.results
+                                    (popularTvShows as ResultStates.Success<List<ResultTVShow>>).data
 
                                 Text(
                                     text = "Popular TV Shows",

@@ -39,6 +39,8 @@ import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.movie.ResultMovie
+import com.example.movieapp.presentation.movie.list.MovieUiEvent
+import com.example.movieapp.presentation.movie.list.MovieViewModel
 import com.example.movieapp.presentation.state.ResultStates
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
@@ -46,12 +48,12 @@ import com.example.movieapp.presentation.state.ResultStates
 fun DetailsPopularScreen(
     navController: NavController,
     movieId: Int,
-    viewModel: MovieDetailViewModel = hiltViewModel()
+    viewModel: MovieViewModel = hiltViewModel()
 ) {
-    val movieDetailState by viewModel.movieDetail.collectAsState()
+    val movieDetailState by viewModel.movieDetailState.collectAsState()
 
     LaunchedEffect(movieId) {
-        viewModel.fetchMovieDetails(movieId)
+        viewModel.onEvent(MovieUiEvent.LoadMovieDetails(movieId))
     }
 
     Scaffold(
@@ -77,7 +79,7 @@ fun DetailsPopularScreen(
                     }
                 }
 
-                is ResultStates.Success<*> -> {
+                is ResultStates.Success -> {
                     val movie = (movieDetailState as ResultStates.Success<ResultMovie>).data
                     Column(
                         modifier = Modifier

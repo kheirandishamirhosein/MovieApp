@@ -39,18 +39,21 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.presentation.state.ResultStates
+import com.example.movieapp.presentation.tv.TvShowViewModel
+import com.example.movieapp.presentation.tv.TvShowsUiEvent
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsTVShowsScreen(
     navController: NavController,
-    movieId: Int,
-    detailsTVShowSViewModel: DetailsTVShowsViewModel = hiltViewModel()
+    tvShowId: Int,
+    viewModel: TvShowViewModel = hiltViewModel()
 ) {
 
-    val detailsTVShow by detailsTVShowSViewModel.detailsTVShow.collectAsState()
+    val detailsTVShow by viewModel.tvShowDetailsState.collectAsState()
 
-    LaunchedEffect(movieId) {
-        detailsTVShowSViewModel.fetchDetailTVShows(movieId)
+    LaunchedEffect(tvShowId) {
+        viewModel.onEvent(TvShowsUiEvent.LoadTvShowDetails(tvShowId))
     }
 
     Scaffold(

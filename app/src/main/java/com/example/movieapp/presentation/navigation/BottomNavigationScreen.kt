@@ -57,7 +57,7 @@ fun BottomNavigationScreen() {
                     arguments = listOf(navArgument("tvShowId") { type = NavType.IntType })
                 ) { backStackEntry ->
                     val tvShowId = backStackEntry.arguments?.getInt("tvShowId") ?: 0
-                    DetailsTVShowsScreen(navController = navController, movieId = tvShowId)
+                    DetailsTVShowsScreen(navController = navController, tvShowId = tvShowId)
                 }
             }
         }
