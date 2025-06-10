@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
+import com.example.movieapp.util.voteAverageFormatted
 import kotlinx.coroutines.delay
 
 @Composable
@@ -143,7 +144,7 @@ fun TVShowCard(tvShow: ResultTVShow) {
                         Icon(Icons.Default.Star, contentDescription = "Vote", tint = Color.Yellow)
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "${tvShow.voteAverage}",
+                            text = tvShow.voteAverage.voteAverageFormatted(),
                             color = Color.White
                         )
                     }

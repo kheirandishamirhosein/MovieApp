@@ -42,6 +42,7 @@ import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.presentation.movie.viewmodel.MovieUiEvent
 import com.example.movieapp.presentation.movie.viewmodel.MovieViewModel
 import com.example.movieapp.presentation.state.ResultStates
+import com.example.movieapp.util.voteAverageFormatted
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
 @Composable
@@ -136,7 +137,7 @@ fun DetailsPopularScreen(
                                 tint = Color.Yellow
                             )
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("Rating: ${movie.voteAverage} (${movie.voteCount} votes)")
+                            Text("Rating: ${movie.voteAverage.voteAverageFormatted()} (${movie.voteCount} votes)")
                         }
                     }
                 }

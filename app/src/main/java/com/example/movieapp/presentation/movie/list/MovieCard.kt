@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.movie.ResultMovie
+import com.example.movieapp.util.voteAverageFormatted
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -112,7 +113,7 @@ fun MovieCard(movie: ResultMovie) {
                         Icon(Icons.Default.Star, contentDescription = "Vote", tint = Color.Yellow)
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "${movie.voteAverage}",
+                            text = movie.voteAverage.voteAverageFormatted(),
                             color = Color.White
                         )
                     }

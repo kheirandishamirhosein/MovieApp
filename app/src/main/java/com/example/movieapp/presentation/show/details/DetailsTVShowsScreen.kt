@@ -41,6 +41,7 @@ import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.presentation.state.ResultStates
 import com.example.movieapp.presentation.show.viewmodel.TvShowViewModel
 import com.example.movieapp.presentation.show.viewmodel.TvShowsUiEvent
+import com.example.movieapp.util.voteAverageFormatted
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -145,7 +146,10 @@ fun DetailsTVShowsScreen(
                                     tint = Color.Yellow
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text("Rating: ${tvShow.voteAverage} (${tvShow.voteCount} votes)")
+                                Text(
+                                    "Rating: ${tvShow.voteAverage.voteAverageFormatted()} " +
+                                            "(${tvShow.voteCount} votes)"
+                                )
                             }
                         }
                     }

@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.movie.ResultMovie
+import com.example.movieapp.util.voteAverageFormatted
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -57,7 +58,7 @@ fun MovieItem(movie: ResultMovie, onClick: () -> Unit) {
                     tint = Color.Yellow
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                Text("Rating: ${movie.voteAverage}")
+                Text("Rating: ${movie.voteAverage.voteAverageFormatted()}")
             }
         }
     }

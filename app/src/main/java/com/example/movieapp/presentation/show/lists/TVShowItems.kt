@@ -31,6 +31,7 @@ import androidx.paging.compose.LazyPagingItems
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
+import com.example.movieapp.util.voteAverageFormatted
 
 
 @Composable
@@ -95,7 +96,7 @@ fun TVShowItem(tvShow: ResultTVShow, onClick: () -> Unit) {
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "${tvShow.voteAverage}",
+                text = tvShow.voteAverage.voteAverageFormatted(),
                 fontSize = 14.sp
             )
         }
