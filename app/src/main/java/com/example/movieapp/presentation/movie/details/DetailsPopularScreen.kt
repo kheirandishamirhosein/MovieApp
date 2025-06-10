@@ -39,8 +39,8 @@ import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.movie.ResultMovie
-import com.example.movieapp.presentation.movie.list.MovieUiEvent
-import com.example.movieapp.presentation.movie.list.MovieViewModel
+import com.example.movieapp.presentation.movie.viewmodel.MovieUiEvent
+import com.example.movieapp.presentation.movie.viewmodel.MovieViewModel
 import com.example.movieapp.presentation.state.ResultStates
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)

@@ -39,8 +39,8 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.presentation.state.ResultStates
-import com.example.movieapp.presentation.tv.TvShowViewModel
-import com.example.movieapp.presentation.tv.TvShowsUiEvent
+import com.example.movieapp.presentation.tv.viewmodel.TvShowViewModel
+import com.example.movieapp.presentation.tv.viewmodel.TvShowsUiEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

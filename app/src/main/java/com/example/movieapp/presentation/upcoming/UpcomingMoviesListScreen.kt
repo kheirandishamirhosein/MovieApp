@@ -12,10 +12,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.movieapp.data.remote.model.movie.MovieResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.presentation.movie.list.MovieItem
 import com.example.movieapp.presentation.state.ResultStates
+import com.example.movieapp.presentation.upcoming.viewmodel.UpcomingMovieViewModel
 
 @Composable
 fun UpcomingMoviesScreen(viewModel: UpcomingMovieViewModel = hiltViewModel()) {

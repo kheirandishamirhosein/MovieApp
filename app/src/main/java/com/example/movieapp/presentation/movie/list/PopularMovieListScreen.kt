@@ -23,6 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.movieapp.data.remote.model.movie.ResultMovie
+import com.example.movieapp.presentation.movie.viewmodel.MovieUiEvent
+import com.example.movieapp.presentation.movie.viewmodel.MovieViewModel
 import com.example.movieapp.presentation.state.ResultStates
 import kotlinx.coroutines.delay
 

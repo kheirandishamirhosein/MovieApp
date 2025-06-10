@@ -1,8 +1,7 @@
-package com.example.movieapp.presentation.upcoming
+package com.example.movieapp.presentation.upcoming.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.movieapp.data.remote.model.movie.MovieResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.domain.usecase.upcoming.GetUpcomingMoviesUseCase
 import com.example.movieapp.presentation.state.ResultStates

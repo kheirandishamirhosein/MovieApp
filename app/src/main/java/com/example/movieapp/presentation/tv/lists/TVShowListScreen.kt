@@ -31,8 +31,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.presentation.state.ResultStates
-import com.example.movieapp.presentation.tv.TvShowViewModel
-import com.example.movieapp.presentation.tv.TvShowsUiEvent
+import com.example.movieapp.presentation.tv.viewmodel.TvShowViewModel
+import com.example.movieapp.presentation.tv.viewmodel.TvShowsUiEvent
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
