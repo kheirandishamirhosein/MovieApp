@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -16,10 +17,15 @@ import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.presentation.movie.list.MovieItem
 import com.example.movieapp.presentation.state.ResultStates
 import com.example.movieapp.presentation.upcoming.viewmodel.UpcomingMovieViewModel
+import com.example.movieapp.presentation.upcoming.viewmodel.UpcomingUiEvent
 
 @Composable
 fun UpcomingMoviesScreen(viewModel: UpcomingMovieViewModel = hiltViewModel()) {
     val upcomingMovies by viewModel.upcomingMoviesState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(UpcomingUiEvent.LoadUpcomingMovies)
+    }
 
     when (upcomingMovies) {
         is ResultStates.Loading -> {
