@@ -27,13 +27,13 @@ interface ApiService {
     @GET("tv/popular")
     suspend fun getPopularTVShows(
         @Query("language") language: String = "en-US",
-        @Query("page") page: Int = 1
+        @Query("page") page: Int
     ): PopularTVShowResponse
 
     @GET("tv/top_rated")
     suspend fun getTopRatedTVShows(
         @Query("language") language: String = "en-US",
-        @Query("page") page: Int = 1
+        @Query("page") page: Int
     ): TopRatedTVShowsResponse
 
     @GET("tv/on_the_air")
@@ -45,7 +45,7 @@ interface ApiService {
     @GET("trending/tv/week")
     suspend fun getTrendingTVShows(
         @Query("language") language: String = "en-US",
-        @Query("page") page: Int = 1
+        @Query("page") page: Int
     ): TrendingTVShowsResponse
 
     @GET("tv/{tv_id}")
