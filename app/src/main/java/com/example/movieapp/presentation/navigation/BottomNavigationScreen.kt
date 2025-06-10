@@ -21,8 +21,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.movieapp.presentation.movie.details.DetailsPopularScreen
 import com.example.movieapp.presentation.movie.list.PopularMovieListScreen
-import com.example.movieapp.presentation.tv.details.DetailsTVShowsScreen
-import com.example.movieapp.presentation.tv.lists.TvShowsListScreen
+import com.example.movieapp.presentation.show.details.DetailsTVShowsScreen
+import com.example.movieapp.presentation.show.lists.TvShowsListScreen
 import com.example.movieapp.presentation.upcoming.UpcomingMoviesScreen
 import com.example.movieapp.util.getIcons
 

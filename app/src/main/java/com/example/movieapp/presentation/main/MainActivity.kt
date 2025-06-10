@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.movieapp.presentation.navigation.BottomNavigationScreen
-import com.example.movieapp.presentation.theme.MovieAppTheme
+import com.example.movieapp.util.theme.MovieAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
