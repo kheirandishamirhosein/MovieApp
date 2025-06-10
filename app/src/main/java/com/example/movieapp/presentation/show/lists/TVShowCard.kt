@@ -1,4 +1,4 @@
-package com.example.movieapp.presentation.tv.lists
+package com.example.movieapp.presentation.show.lists
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

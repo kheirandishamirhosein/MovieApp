@@ -1,4 +1,4 @@
-package com.example.movieapp.presentation.tv.lists
+package com.example.movieapp.presentation.show.lists
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -31,8 +31,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.presentation.state.ResultStates
-import com.example.movieapp.presentation.tv.viewmodel.TvShowViewModel
-import com.example.movieapp.presentation.tv.viewmodel.TvShowsUiEvent
+import com.example.movieapp.presentation.show.viewmodel.TvShowViewModel
+import com.example.movieapp.presentation.show.viewmodel.TvShowsUiEvent
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)

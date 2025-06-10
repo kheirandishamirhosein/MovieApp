@@ -1,4 +1,4 @@
-package com.example.movieapp.presentation.tv.details
+package com.example.movieapp.presentation.show.details
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -39,8 +39,8 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.presentation.state.ResultStates
-import com.example.movieapp.presentation.tv.viewmodel.TvShowViewModel
-import com.example.movieapp.presentation.tv.viewmodel.TvShowsUiEvent
+import com.example.movieapp.presentation.show.viewmodel.TvShowViewModel
+import com.example.movieapp.presentation.show.viewmodel.TvShowsUiEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
