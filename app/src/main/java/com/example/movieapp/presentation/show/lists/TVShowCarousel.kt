@@ -1,5 +1,8 @@
 package com.example.movieapp.presentation.show.lists
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +23,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -32,6 +40,27 @@ import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
+import kotlinx.coroutines.delay
+
+@Composable
+fun TVShowCarousel(tvShow: List<ResultTVShow>) {
+    var currentIndex by remember { mutableIntStateOf(0) }
+    LaunchedEffect(currentIndex) {
+        delay(5000)
+        currentIndex = (currentIndex + 1) % tvShow.size
+    }
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        tvShow.forEachIndexed { index, tv ->
+            AnimatedVisibility(
+                visible = index == currentIndex,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                TVShowCard(tvShow = tv)
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
