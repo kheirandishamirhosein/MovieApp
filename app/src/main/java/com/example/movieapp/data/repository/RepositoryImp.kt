@@ -5,17 +5,11 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.movieapp.data.remote.api.ApiService
 import com.example.movieapp.util.apiWrapper
-import com.example.movieapp.data.remote.model.movie.MovieResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
-import com.example.movieapp.data.remote.model.tvShow.onTheAir.OnTheAirTVShowsResponse
-import com.example.movieapp.data.remote.model.tvShow.popular.PopularTVShowResponse
-import com.example.movieapp.data.remote.model.tvShow.topRated.TopRatedTVShowsResponse
-import com.example.movieapp.data.remote.model.tvShow.trending.TrendingTVShowsResponse
 import com.example.movieapp.domain.repository.Repository
 import com.example.movieapp.presentation.state.ResultStates
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class RepositoryImp @Inject constructor(
