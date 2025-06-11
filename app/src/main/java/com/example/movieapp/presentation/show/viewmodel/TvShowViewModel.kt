@@ -4,9 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.movieapp.data.remote.model.movie.MovieCreditsResponse
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
+import com.example.movieapp.data.remote.model.tvShow.details.TVShowCreditsResponse
 import com.example.movieapp.domain.usecase.show.GetOnTheAirTVShowsUseCase
 import com.example.movieapp.domain.usecase.show.GetPopularTVShowsUseCase
+import com.example.movieapp.domain.usecase.show.GetTVShowCreditsUseCase
 import com.example.movieapp.domain.usecase.show.GetTopRatedTVShowsUseCase
 import com.example.movieapp.domain.usecase.show.GetTrendingTVShowsUseCase
 import com.example.movieapp.domain.usecase.show.GetTvShowDetailsUseCase
@@ -24,7 +27,8 @@ class TvShowViewModel @Inject constructor(
     private val getOnTheAirTVShowsUseCase: GetOnTheAirTVShowsUseCase,
     getTopRatedTVShowsUseCase: GetTopRatedTVShowsUseCase,
     getTrendingTVShowsUseCase: GetTrendingTVShowsUseCase,
-    private val getTvShowDetailsUseCase: GetTvShowDetailsUseCase
+    private val getTvShowDetailsUseCase: GetTvShowDetailsUseCase,
+    private val getMovieCreditsUseCase: GetTVShowCreditsUseCase
 ): ViewModel() {
 
     val popularTVShows: Flow<PagingData<ResultTVShow>> =
@@ -43,6 +47,9 @@ class TvShowViewModel @Inject constructor(
     private val _tvShowDetailsState = MutableStateFlow<ResultStates<ResultTVShow>>(ResultStates.Loading)
     val tvShowDetailsState: StateFlow<ResultStates<ResultTVShow>> = _tvShowDetailsState
 
+    private val _castState = MutableStateFlow<ResultStates<TVShowCreditsResponse>>(ResultStates.Loading)
+    val castState: StateFlow<ResultStates<TVShowCreditsResponse>> = _castState
+
     fun onEvent(event: TvShowsUiEvent) {
         when(event) {
 
@@ -53,6 +60,11 @@ class TvShowViewModel @Inject constructor(
             is TvShowsUiEvent.LoadTvShowDetails -> {
                 fetchTvShowDetails(event.tvShowId)
             }
+
+            is TvShowsUiEvent.LoadTVShowCredits -> {
+                fetchTVShowCredits(event.tvShowId)
+            }
+
             else -> Unit
         }
     }
@@ -70,6 +82,13 @@ class TvShowViewModel @Inject constructor(
             _tvShowDetailsState.value = getTvShowDetailsUseCase(tvShowId)
         }
     }
+
+    private fun fetchTVShowCredits(tvShowId: Int) {
+        viewModelScope.launch {
+            _castState.value = ResultStates.Loading
+            _castState.value = getMovieCreditsUseCase(tvShowId)
+        }
+    }
 }
 
 sealed class TvShowsUiEvent {
@@ -78,4 +97,5 @@ sealed class TvShowsUiEvent {
     data object LoadOnTheAirTVShows: TvShowsUiEvent()
     data object LoadTrendingTVShows: TvShowsUiEvent()
     data class LoadTvShowDetails(val tvShowId: Int): TvShowsUiEvent()
+    data class LoadTVShowCredits(val tvShowId: Int): TvShowsUiEvent()
 }

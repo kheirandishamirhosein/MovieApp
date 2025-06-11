@@ -8,6 +8,7 @@ import com.example.movieapp.data.remote.model.movie.MovieCreditsResponse
 import com.example.movieapp.util.apiWrapper
 import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
+import com.example.movieapp.data.remote.model.tvShow.details.TVShowCreditsResponse
 import com.example.movieapp.domain.repository.Repository
 import com.example.movieapp.presentation.state.ResultStates
 import kotlinx.coroutines.flow.Flow
@@ -70,6 +71,10 @@ class RepositoryImp @Inject constructor(
 
     override suspend fun getMovieCredits(movieId: Int): ResultStates<MovieCreditsResponse> {
         return apiWrapper { apiService.getMovieCredits(movieId) }
+    }
+
+    override suspend fun getTVShowCredits(tvId: Int): ResultStates<TVShowCreditsResponse> {
+        return apiWrapper { apiService.getTVShowCredits(tvId) }
     }
 
 }

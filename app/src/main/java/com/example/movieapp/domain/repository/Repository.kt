@@ -5,6 +5,7 @@ import com.example.movieapp.data.remote.model.movie.CastMember
 import com.example.movieapp.data.remote.model.movie.MovieCreditsResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
+import com.example.movieapp.data.remote.model.tvShow.details.TVShowCreditsResponse
 import com.example.movieapp.presentation.state.ResultStates
 import kotlinx.coroutines.flow.Flow
 
@@ -18,4 +19,5 @@ interface Repository {
     fun getTrendingTVShowsPaging(): Flow<PagingData<ResultTVShow>>
     suspend fun getTVShowDetails(tvId: Int): ResultStates<ResultTVShow>
     suspend fun getMovieCredits(movieId: Int): ResultStates<MovieCreditsResponse>
+    suspend fun getTVShowCredits(tvId: Int): ResultStates<TVShowCreditsResponse>
 }

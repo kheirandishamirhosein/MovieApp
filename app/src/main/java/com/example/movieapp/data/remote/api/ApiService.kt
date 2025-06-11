@@ -4,6 +4,7 @@ import com.example.movieapp.data.remote.model.movie.MovieCreditsResponse
 import com.example.movieapp.data.remote.model.movie.MovieResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
+import com.example.movieapp.data.remote.model.tvShow.details.TVShowCreditsResponse
 import com.example.movieapp.data.remote.model.tvShow.onTheAir.OnTheAirTVShowsResponse
 import com.example.movieapp.data.remote.model.tvShow.popular.PopularTVShowResponse
 import com.example.movieapp.data.remote.model.tvShow.topRated.TopRatedTVShowsResponse
@@ -59,4 +60,10 @@ interface ApiService {
     suspend fun getMovieCredits(
         @Path("movie_id") movieId: Int
     ): MovieCreditsResponse
+
+    @GET("tv/{tv_id}/credits")
+    suspend fun getTVShowCredits(
+        @Path("tv_id") tvId: Int
+    ): TVShowCreditsResponse
+
 }
