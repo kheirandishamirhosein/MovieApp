@@ -40,6 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
+import com.example.movieapp.data.remote.model.tvShow.details.TVShowCreditsResponse
 import com.example.movieapp.presentation.state.ResultStates
 import com.example.movieapp.presentation.show.viewmodel.TvShowViewModel
 import com.example.movieapp.presentation.show.viewmodel.TvShowsUiEvent
@@ -54,9 +55,11 @@ fun DetailsTVShowsScreen(
 ) {
 
     val detailsTVShow by viewModel.tvShowDetailsState.collectAsState()
+    val castState by viewModel.castState.collectAsState()
 
     LaunchedEffect(tvShowId) {
         viewModel.onEvent(TvShowsUiEvent.LoadTvShowDetails(tvShowId))
+        viewModel.onEvent(TvShowsUiEvent.LoadTVShowCredits(tvShowId))
     }
 
     Scaffold(
@@ -90,7 +93,6 @@ fun DetailsTVShowsScreen(
                             .verticalScroll(rememberScrollState())
                             .padding(16.dp)
                     ) {
-
                         Card(
                             shape = RoundedCornerShape(16.dp),
                             modifier = Modifier
@@ -128,29 +130,56 @@ fun DetailsTVShowsScreen(
                                 color = Color.Magenta
                             )
                         }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = tvShow.overview,
-                        fontSize = 16.sp
-                    )
 
 
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            Icons.Default.Star,
-                            contentDescription = "Vote",
-                            tint = Color.Yellow
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            "Rating: ${tvShow.voteAverage.voteAverageFormatted()} " +
-                                    "(${tvShow.voteCount} votes)"
+                            text = tvShow.overview,
+                            fontSize = 16.sp
                         )
+
+
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                Icons.Default.Star,
+                                contentDescription = "Vote",
+                                tint = Color.Yellow
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                "Rating: ${tvShow.voteAverage.voteAverageFormatted()} " +
+                                        "(${tvShow.voteCount} votes)"
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Text(
+                            text = "Cast",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        when (castState) {
+                            is ResultStates.Loading -> {
+                                CircularProgressIndicator()
+                            }
+
+                            is ResultStates.Success -> {
+                                val credits =
+                                    (castState as ResultStates.Success<TVShowCreditsResponse>).data
+                                CastList(castList = credits.cast ?: emptyList())
+                            }
+
+                            is ResultStates.Error -> {
+                                Text("Failed to load cast", color = Color.Red)
+                            }
+                        }
                     }
                 }
 
