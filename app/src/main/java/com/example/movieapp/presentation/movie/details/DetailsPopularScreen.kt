@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
@@ -38,6 +40,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import com.example.movieapp.data.remote.model.movie.CastMember
+import com.example.movieapp.data.remote.model.movie.MovieCreditsResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.presentation.movie.viewmodel.MovieUiEvent
 import com.example.movieapp.presentation.movie.viewmodel.MovieViewModel
@@ -52,9 +56,11 @@ fun DetailsPopularScreen(
     viewModel: MovieViewModel = hiltViewModel()
 ) {
     val movieDetailState by viewModel.movieDetailState.collectAsState()
+    val castState by viewModel.castState.collectAsState()
 
     LaunchedEffect(movieId) {
         viewModel.onEvent(MovieUiEvent.LoadMovieDetails(movieId))
+        viewModel.onEvent(MovieUiEvent.LoadMovieCredits(movieId))
     }
 
     Scaffold(
@@ -85,6 +91,7 @@ fun DetailsPopularScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
                             .padding(16.dp)
                     ) {
                         Card(
@@ -138,6 +145,31 @@ fun DetailsPopularScreen(
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text("Rating: ${movie.voteAverage.voteAverageFormatted()} (${movie.voteCount} votes)")
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+                        Text(
+                            text = "Cast",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        when (castState) {
+                            is ResultStates.Loading -> {
+                                CircularProgressIndicator()
+                            }
+
+                            is ResultStates.Success -> {
+                                val credits =
+                                    (castState as ResultStates.Success<MovieCreditsResponse>).data
+                                CastList(castList = credits.cast ?: emptyList())
+                            }
+
+                            is ResultStates.Error -> {
+                                Text("Failed to load cast", color = Color.Red)
+                            }
                         }
                     }
                 }
