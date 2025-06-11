@@ -3,6 +3,7 @@ package com.example.movieapp.presentation.show.details
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,8 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
@@ -82,76 +84,73 @@ fun DetailsTVShowsScreen(
 
                 is ResultStates.Success -> {
                     val tvShow = (detailsTVShow as ResultStates.Success<ResultTVShow>).data
-                    LazyColumn(
+                    Column(
                         modifier = Modifier
                             .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
                             .padding(16.dp)
                     ) {
-                        item {
-                            Card(
-                                shape = RoundedCornerShape(16.dp),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(200.dp)
-                            ) {
-                                Image(
-                                    painter = rememberImagePainter("https://image.tmdb.org/t/p/w500${tvShow.backdropPath}"),
-                                    contentDescription = null,
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentScale = ContentScale.Crop
-                                )
-                            }
-                        }
-                        item {
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Text(
-                                text = tvShow.originalName,
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.Bold
+
+                        Card(
+                            shape = RoundedCornerShape(16.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                        ) {
+                            Image(
+                                painter = rememberImagePainter("https://image.tmdb.org/t/p/w500${tvShow.backdropPath}"),
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
                             )
                         }
-                        item {
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text(
-                                    text = "Release Date: ${tvShow.firstAirDate}",
-                                    fontSize = 14.sp,
-                                    color = Color.Magenta
-                                )
-                                Text(
-                                    text = "Popularity: ${tvShow.popularity}",
-                                    fontSize = 14.sp,
-                                    color = Color.Magenta
-                                )
-                            }
-                        }
-                        item {
-                            Spacer(modifier = Modifier.height(16.dp))
+
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = tvShow.originalName,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
                             Text(
-                                text = tvShow.overview,
-                                fontSize = 16.sp
+                                text = "Release Date: ${tvShow.firstAirDate}",
+                                fontSize = 14.sp,
+                                color = Color.Magenta
+                            )
+                            Text(
+                                text = "Popularity: ${tvShow.popularity}",
+                                fontSize = 14.sp,
+                                color = Color.Magenta
                             )
                         }
-                        item {
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    Icons.Default.Star,
-                                    contentDescription = "Vote",
-                                    tint = Color.Yellow
-                                )
-                                Spacer(modifier = Modifier.width(4.dp))
-                                Text(
-                                    "Rating: ${tvShow.voteAverage.voteAverageFormatted()} " +
-                                            "(${tvShow.voteCount} votes)"
-                                )
-                            }
-                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = tvShow.overview,
+                        fontSize = 16.sp
+                    )
+
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Default.Star,
+                            contentDescription = "Vote",
+                            tint = Color.Yellow
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            "Rating: ${tvShow.voteAverage.voteAverageFormatted()} " +
+                                    "(${tvShow.voteCount} votes)"
+                        )
                     }
                 }
 
