@@ -1,5 +1,6 @@
 package com.example.movieapp.data.remote.api
 
+import com.example.movieapp.data.remote.model.movie.MovieCreditsResponse
 import com.example.movieapp.data.remote.model.movie.MovieResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
@@ -54,4 +55,8 @@ interface ApiService {
         @Query("language") language: String = "en-US"
     ): ResultTVShow
 
+    @GET("movie/{movie_id}/credits")
+    suspend fun getMovieCredits(
+        @Path("movie_id") movieId: Int
+    ): MovieCreditsResponse
 }

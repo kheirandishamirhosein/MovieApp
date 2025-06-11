@@ -1,6 +1,8 @@
 package com.example.movieapp.domain.repository
 
 import androidx.paging.PagingData
+import com.example.movieapp.data.remote.model.movie.CastMember
+import com.example.movieapp.data.remote.model.movie.MovieCreditsResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.presentation.state.ResultStates
@@ -15,4 +17,5 @@ interface Repository {
     suspend fun getOnTheAirTVShows(): ResultStates<List<ResultTVShow>>
     fun getTrendingTVShowsPaging(): Flow<PagingData<ResultTVShow>>
     suspend fun getTVShowDetails(tvId: Int): ResultStates<ResultTVShow>
+    suspend fun getMovieCredits(movieId: Int): ResultStates<MovieCreditsResponse>
 }

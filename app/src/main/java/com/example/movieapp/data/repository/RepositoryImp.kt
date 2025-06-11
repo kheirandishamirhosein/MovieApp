@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.movieapp.data.remote.api.ApiService
+import com.example.movieapp.data.remote.model.movie.MovieCreditsResponse
 import com.example.movieapp.util.apiWrapper
 import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
@@ -65,6 +66,10 @@ class RepositoryImp @Inject constructor(
 
     override suspend fun getTVShowDetails(tvId: Int): ResultStates<ResultTVShow> {
         return apiWrapper { apiService.getTVShowDetails(tvId) }
+    }
+
+    override suspend fun getMovieCredits(movieId: Int): ResultStates<MovieCreditsResponse> {
+        return apiWrapper { apiService.getMovieCredits(movieId) }
     }
 
 }
