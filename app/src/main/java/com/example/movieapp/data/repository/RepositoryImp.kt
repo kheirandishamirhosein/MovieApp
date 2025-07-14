@@ -22,6 +22,16 @@ class RepositoryImp @Inject constructor(
         return apiWrapper { apiService.getPopularMovies().results }
     }
 
+    override fun getNowPlayingMoviesPaging(): Flow<PagingData<ResultMovie>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { NowPlayingMoviesPagingSource(apiService) }
+        ).flow
+    }
+
     override suspend fun getMovieDetails(movieId: Int): ResultStates<ResultMovie> {
         return apiWrapper { apiService.getMovieDetails(movieId) }
     }
