@@ -123,19 +123,11 @@ fun TVShowSection(
             .padding(top = 16.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
     )
 
-    when (val refreshLoadState = tvShows.loadState.refresh) {
-        is LoadState.Loading -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        }
+    when (tvShows.loadState.refresh) {
         is LoadState.Error -> {
             Text(
-                text = "Error loading $title: ${refreshLoadState.error.message}",
+                text = "Error loading " +
+                        "$title: ${(tvShows.loadState.refresh as LoadState.Error).error.message}",
                 color = Color.Red,
                 modifier = Modifier.padding(16.dp)
             )
