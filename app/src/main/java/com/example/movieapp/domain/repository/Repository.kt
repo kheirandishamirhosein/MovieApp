@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface Repository {
     suspend fun getPopularMovies(): ResultStates<List<ResultMovie>>
     fun getNowPlayingMoviesPaging(): Flow<PagingData<ResultMovie>>
+    fun getTopRatedMoviesPaging(): Flow<PagingData<ResultMovie>>
     suspend fun getMovieDetails(movieId: Int): ResultStates<ResultMovie>
     suspend fun getUpcomingMovies(): ResultStates<List<ResultMovie>>
     fun getPopularTVShowsPaging(): Flow<PagingData<ResultTVShow>>

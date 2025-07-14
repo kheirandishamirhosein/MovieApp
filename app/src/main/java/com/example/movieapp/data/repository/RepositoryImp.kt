@@ -32,6 +32,16 @@ class RepositoryImp @Inject constructor(
         ).flow
     }
 
+    override fun getTopRatedMoviesPaging(): Flow<PagingData<ResultMovie>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { TopRatedMoviesPagingSource(apiService) }
+        ).flow
+    }
+
     override suspend fun getMovieDetails(movieId: Int): ResultStates<ResultMovie> {
         return apiWrapper { apiService.getMovieDetails(movieId) }
     }
