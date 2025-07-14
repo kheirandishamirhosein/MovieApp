@@ -20,7 +20,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.movieapp.presentation.movie.details.DetailsPopularScreen
-import com.example.movieapp.presentation.movie.list.PopularMovieListScreen
+import com.example.movieapp.presentation.movie.list.MovieListScreen
 import com.example.movieapp.presentation.show.details.DetailsTVShowsScreen
 import com.example.movieapp.presentation.show.lists.TvShowsListScreen
 import com.example.movieapp.presentation.upcoming.UpcomingMoviesScreen
@@ -42,7 +42,7 @@ fun BottomNavigationScreen() {
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             NavHost(navController = navController, startDestination = items[0].route) {
-                composable(items[0].route) { PopularMovieListScreen(navController = navController) }
+                composable(items[0].route) { MovieListScreen(navController = navController) }
                 composable(items[1].route) { UpcomingMoviesScreen() }
                 composable(items[2].route) { TvShowsListScreen(navController = navController) }
                 composable(
