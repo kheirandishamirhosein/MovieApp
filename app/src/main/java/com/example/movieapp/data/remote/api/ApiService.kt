@@ -6,7 +6,7 @@ import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.data.remote.model.tvShow.details.TVShowCreditsResponse
 import com.example.movieapp.data.remote.model.tvShow.onTheAir.OnTheAirTVShowsResponse
-import com.example.movieapp.data.remote.model.tvShow.popular.PopularTVShowResponse
+import com.example.movieapp.data.remote.model.tvShow.popular.TVShowResponse
 import com.example.movieapp.data.remote.model.tvShow.topRated.TopRatedTVShowsResponse
 import com.example.movieapp.data.remote.model.tvShow.trending.TrendingTVShowsResponse
 import retrofit2.http.GET
@@ -48,7 +48,7 @@ interface ApiService {
     suspend fun getPopularTVShows(
         @Query("language") language: String = "en-US",
         @Query("page") page: Int
-    ): PopularTVShowResponse
+    ): TVShowResponse
 
     @GET("tv/top_rated")
     suspend fun getTopRatedTVShows(
