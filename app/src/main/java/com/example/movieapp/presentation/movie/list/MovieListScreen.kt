@@ -34,16 +34,19 @@ fun MovieListScreen(
     val moviesState by viewModel.popularMoviesState.collectAsState()
     val nowPlayingMovies = viewModel.nowPlayingMovies.collectAsLazyPagingItems()
     val topRatedMovies = viewModel.topRatedMovies.collectAsLazyPagingItems()
+    val trendingMovies = viewModel.trendingMovies.collectAsLazyPagingItems()
 
     LaunchedEffect(Unit) {
         viewModel.onEvent(MovieUiEvent.LoadPopularMovies)
         viewModel.onEvent(MovieUiEvent.LoadNowPlayingMovies)
         viewModel.onEvent(MovieUiEvent.LoadTopRatedMovies)
+        viewModel.onEvent(MovieUiEvent.LoadTrendingMovies)
     }
 
     val isLoading =
         nowPlayingMovies.loadState.refresh is LoadState.Loading &&
                 topRatedMovies.loadState.refresh is LoadState.Loading &&
+                trendingMovies.loadState.refresh is LoadState.Loading &&
                 moviesState is ResultStates.Loading
 
     Scaffold(
@@ -82,7 +85,7 @@ fun MovieListScreen(
                         }
 
                         MovieSection(
-                            title = "Now Playing Movies",
+                            title = "Now Playing",
                             movies = nowPlayingMovies,
                             onItemClick = { movie ->
                                 navController.navigate("movieDetail/${movie.id}")
@@ -96,6 +99,15 @@ fun MovieListScreen(
                                 navController.navigate("movieDetail/${movie.id}")
                             }
                         )
+
+                        MovieSection(
+                            title = "Trending",
+                            movies = trendingMovies,
+                            onItemClick = { movie ->
+                                navController.navigate("movieDetail/${movie.id}")
+                            }
+                        )
+
                     }
                 }
             }
