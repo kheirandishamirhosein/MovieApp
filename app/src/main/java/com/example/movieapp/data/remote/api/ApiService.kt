@@ -88,8 +88,14 @@ interface ApiService {
     suspend fun getSimilarMovies(
         @Path("movie_id") movieId: Int,
         @Query("language") language: String = "en-US",
-        @Query("page") page: Int = 1
+        @Query("page") page: Int
     ): MovieResponse
 
+    @GET("tv/{tv_id}/similar")
+    suspend fun getSimilarTVShows(
+        @Path("tv_id") tvId: Int,
+        @Query("language") language: String = "en-US",
+        @Query("page") page: Int
+    ): TVShowResponse
 
 }

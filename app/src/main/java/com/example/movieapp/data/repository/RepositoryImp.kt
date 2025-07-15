@@ -117,4 +117,14 @@ class RepositoryImp @Inject constructor(
         ).flow
     }
 
+    override fun getSimilarTVShows(tvId: Int): Flow<PagingData<ResultTVShow>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 10,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { SimilarTVShowsPagingSource(apiService, tvId) }
+        ).flow
+    }
+
 }

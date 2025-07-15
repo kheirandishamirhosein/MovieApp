@@ -38,9 +38,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.data.remote.model.tvShow.details.TVShowCreditsResponse
+import com.example.movieapp.presentation.movie.list.MovieList
+import com.example.movieapp.presentation.show.lists.TVShowList
 import com.example.movieapp.presentation.state.ResultStates
 import com.example.movieapp.presentation.show.viewmodel.TvShowViewModel
 import com.example.movieapp.presentation.show.viewmodel.TvShowsUiEvent
@@ -56,10 +59,12 @@ fun DetailsTVShowsScreen(
 
     val detailsTVShow by viewModel.tvShowDetailsState.collectAsState()
     val castState by viewModel.castState.collectAsState()
+    val similarTVShows = viewModel.similarTVShows(tvShowId).collectAsLazyPagingItems()
 
     LaunchedEffect(tvShowId) {
         viewModel.onEvent(TvShowsUiEvent.LoadTvShowDetails(tvShowId))
         viewModel.onEvent(TvShowsUiEvent.LoadTVShowCredits(tvShowId))
+        viewModel.onEvent(TvShowsUiEvent.LoadSimilarTVShows(tvShowId))
     }
 
     Scaffold(
@@ -179,6 +184,25 @@ fun DetailsTVShowsScreen(
                             is ResultStates.Error -> {
                                 Text("Failed to load cast", color = Color.Red)
                             }
+                        }
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        when(castState) {
+                            is ResultStates.Success -> {
+                                Text(
+                                    text = "Similar TV Shows",
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(start = 8.dp)
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                TVShowList(
+                                    tvShows = similarTVShows, onItemClick = {
+                                        navController.navigate("tvShowsDetail/${it.id}")
+                                    }
+                                )
+                            }
+                            else -> {}
                         }
                     }
                 }

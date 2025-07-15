@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.movieapp.data.remote.model.movie.MovieCreditsResponse
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.data.remote.model.tvShow.details.TVShowCreditsResponse
 import com.example.movieapp.domain.usecase.show.GetOnTheAirTVShowsUseCase
 import com.example.movieapp.domain.usecase.show.GetPopularTVShowsUseCase
+import com.example.movieapp.domain.usecase.show.GetSimilarTVShowsUseCase
 import com.example.movieapp.domain.usecase.show.GetTVShowCreditsUseCase
 import com.example.movieapp.domain.usecase.show.GetTopRatedTVShowsUseCase
 import com.example.movieapp.domain.usecase.show.GetTrendingTVShowsUseCase
@@ -27,6 +27,7 @@ class TvShowViewModel @Inject constructor(
     private val getOnTheAirTVShowsUseCase: GetOnTheAirTVShowsUseCase,
     getTopRatedTVShowsUseCase: GetTopRatedTVShowsUseCase,
     getTrendingTVShowsUseCase: GetTrendingTVShowsUseCase,
+    getSimilarTVShowsUseCase: GetSimilarTVShowsUseCase,
     private val getTvShowDetailsUseCase: GetTvShowDetailsUseCase,
     private val getMovieCreditsUseCase: GetTVShowCreditsUseCase
 ): ViewModel() {
@@ -49,6 +50,10 @@ class TvShowViewModel @Inject constructor(
 
     private val _castState = MutableStateFlow<ResultStates<TVShowCreditsResponse>>(ResultStates.Loading)
     val castState: StateFlow<ResultStates<TVShowCreditsResponse>> = _castState
+
+    val similarTVShows: (tvId: Int) ->  Flow<PagingData<ResultTVShow>> = { tvId ->
+        getSimilarTVShowsUseCase(tvId).cachedIn(viewModelScope)
+    }
 
     fun onEvent(event: TvShowsUiEvent) {
         when(event) {
@@ -96,6 +101,7 @@ sealed class TvShowsUiEvent {
     data object LoadTopRatedTVShows: TvShowsUiEvent()
     data object LoadOnTheAirTVShows: TvShowsUiEvent()
     data object LoadTrendingTVShows: TvShowsUiEvent()
+    data class LoadSimilarTVShows(val tvShowId: Int): TvShowsUiEvent()
     data class LoadTvShowDetails(val tvShowId: Int): TvShowsUiEvent()
     data class LoadTVShowCredits(val tvShowId: Int): TvShowsUiEvent()
 }
