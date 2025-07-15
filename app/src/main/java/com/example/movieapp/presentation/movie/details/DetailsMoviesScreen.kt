@@ -150,28 +150,25 @@ fun DetailsMoviesScreen(
                         }
 
                         Spacer(modifier = Modifier.height(24.dp))
-                        Text(
-                            text = "Cast",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
 
                         when (castState) {
-                            is ResultStates.Loading -> {
-                                CircularProgressIndicator()
-                            }
-
                             is ResultStates.Success -> {
                                 val credits =
                                     (castState as ResultStates.Success<MovieCreditsResponse>).data
+
+                                Text(
+                                    text = "Cast",
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(start = 8.dp)
+                                )
+
+                                Spacer(modifier = Modifier.height(8.dp))
+
                                 CastList(castList = credits.cast ?: emptyList())
                             }
 
-                            is ResultStates.Error -> {
-                                Text("Failed to load cast", color = Color.Red)
-                            }
+                            else -> {}
                         }
 
                         Spacer(modifier = Modifier.height(24.dp))
