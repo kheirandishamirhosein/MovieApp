@@ -22,4 +22,5 @@ interface Repository {
     suspend fun getTVShowDetails(tvId: Int): ResultStates<ResultTVShow>
     suspend fun getMovieCredits(movieId: Int): ResultStates<MovieCreditsResponse>
     suspend fun getTVShowCredits(tvId: Int): ResultStates<TVShowCreditsResponse>
+    fun getSimilarMovies(movieId: Int): Flow<PagingData<ResultMovie>>
 }

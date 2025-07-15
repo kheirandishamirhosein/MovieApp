@@ -35,6 +35,7 @@ fun MovieListScreen(
     val nowPlayingMovies = viewModel.nowPlayingMovies.collectAsLazyPagingItems()
     val topRatedMovies = viewModel.topRatedMovies.collectAsLazyPagingItems()
     val trendingMovies = viewModel.trendingMovies.collectAsLazyPagingItems()
+    val similarMovies = viewModel.similarMovies
 
     LaunchedEffect(Unit) {
         viewModel.onEvent(MovieUiEvent.LoadPopularMovies)

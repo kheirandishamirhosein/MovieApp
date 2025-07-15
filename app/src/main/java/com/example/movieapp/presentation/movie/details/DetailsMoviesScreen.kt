@@ -38,11 +38,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.example.movieapp.data.remote.model.movie.CastMember
 import com.example.movieapp.data.remote.model.movie.MovieCreditsResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
+import com.example.movieapp.presentation.movie.list.MovieList
 import com.example.movieapp.presentation.movie.viewmodel.MovieUiEvent
 import com.example.movieapp.presentation.movie.viewmodel.MovieViewModel
 import com.example.movieapp.presentation.state.ResultStates
@@ -50,13 +51,14 @@ import com.example.movieapp.util.voteAverageFormatted
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
 @Composable
-fun DetailsPopularScreen(
+fun DetailsMoviesScreen(
     navController: NavController,
     movieId: Int,
     viewModel: MovieViewModel = hiltViewModel()
 ) {
     val movieDetailState by viewModel.movieDetailState.collectAsState()
     val castState by viewModel.castState.collectAsState()
+    val similarMovies = viewModel.similarMovies(movieId).collectAsLazyPagingItems()
 
     LaunchedEffect(movieId) {
         viewModel.onEvent(MovieUiEvent.LoadMovieDetails(movieId))
@@ -170,6 +172,26 @@ fun DetailsPopularScreen(
                             is ResultStates.Error -> {
                                 Text("Failed to load cast", color = Color.Red)
                             }
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        when (castState) {
+                            is ResultStates.Success -> {
+                                Text(
+                                    text = "Similar Movies",
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(start = 8.dp)
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                MovieList(
+                                    movies = similarMovies, onItemClick = {
+                                        navController.navigate("movieDetail/${it.id}")
+                                    }
+                                )
+                            }
+                            else -> {}
                         }
                     }
                 }

@@ -19,7 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.movieapp.presentation.movie.details.DetailsPopularScreen
+import com.example.movieapp.presentation.movie.details.DetailsMoviesScreen
 import com.example.movieapp.presentation.movie.list.MovieListScreen
 import com.example.movieapp.presentation.show.details.DetailsTVShowsScreen
 import com.example.movieapp.presentation.show.lists.TvShowsListScreen
@@ -50,7 +50,7 @@ fun BottomNavigationScreen() {
                     arguments = listOf(navArgument("movieId") { type = NavType.IntType })
                 ) { backStackEntry ->
                     val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
-                    DetailsPopularScreen(navController, movieId)
+                    DetailsMoviesScreen(navController, movieId)
                 }
                 composable(
                     "tvShowsDetail/{tvShowId}",

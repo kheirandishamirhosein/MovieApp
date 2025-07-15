@@ -9,6 +9,7 @@ import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.domain.usecase.movie.GetMovieCreditsUseCase
 import com.example.movieapp.domain.usecase.movie.GetMovieDetailsUseCase
 import com.example.movieapp.domain.usecase.movie.GetNowPlayingMoviesUseCase
+import com.example.movieapp.domain.usecase.movie.GetSimilarMoviesUseCase
 import com.example.movieapp.domain.usecase.movie.GetTopRatedMoviesUseCase
 import com.example.movieapp.domain.usecase.movie.GetTrendingMoviesUseCase
 import com.example.movieapp.domain.usecase.movie.PopularMovieListUseCase
@@ -26,6 +27,7 @@ class MovieViewModel @Inject constructor(
     getNowPlayingMoviesUseCase: GetNowPlayingMoviesUseCase,
     getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase,
     getTrendingMoviesUseCase: GetTrendingMoviesUseCase,
+    getSimilarMoviesUseCase: GetSimilarMoviesUseCase,
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     private val getMovieCreditsUseCase: GetMovieCreditsUseCase
 ) : ViewModel() {
@@ -48,6 +50,9 @@ class MovieViewModel @Inject constructor(
     private val _castState = MutableStateFlow<ResultStates<MovieCreditsResponse>>(ResultStates.Loading)
     val castState: StateFlow<ResultStates<MovieCreditsResponse>> = _castState
 
+    val similarMovies: (movieId: Int) -> Flow<PagingData<ResultMovie>> = { movieId ->
+        getSimilarMoviesUseCase(movieId).cachedIn(viewModelScope)
+    }
 
     fun onEvent(event: MovieUiEvent) {
         when (event) {
@@ -95,6 +100,7 @@ sealed class MovieUiEvent {
     data object LoadNowPlayingMovies : MovieUiEvent()
     data object LoadTopRatedMovies : MovieUiEvent()
     data object LoadTrendingMovies : MovieUiEvent()
+    data class LoadSimilarMovies(val movieId: Int) : MovieUiEvent()
     data class LoadMovieDetails(val movieId: Int) : MovieUiEvent()
     data class LoadMovieCredits(val movieId: Int) : MovieUiEvent()
 }

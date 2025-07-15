@@ -107,4 +107,14 @@ class RepositoryImp @Inject constructor(
         return apiWrapper { apiService.getTVShowCredits(tvId) }
     }
 
+    override fun getSimilarMovies(movieId: Int): Flow<PagingData<ResultMovie>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 10,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { SimilarMoviesPagingSource(apiService, movieId) }
+        ).flow
+    }
+
 }
