@@ -3,7 +3,7 @@ package com.example.movieapp.presentation.navigation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -23,7 +23,6 @@ import com.example.movieapp.presentation.movie.details.DetailsMoviesScreen
 import com.example.movieapp.presentation.movie.list.MovieListScreen
 import com.example.movieapp.presentation.show.details.DetailsTVShowsScreen
 import com.example.movieapp.presentation.show.lists.TvShowsListScreen
-import com.example.movieapp.presentation.upcoming.UpcomingMoviesScreen
 import com.example.movieapp.util.getIcons
 
 @Composable
@@ -33,7 +32,7 @@ fun BottomNavigationScreen() {
 
     val items = listOf(
         ScreenState.PopularMovies(icons["movie"]!!),
-        ScreenState.UpcomingMovies(Icons.Default.DateRange),
+        ScreenState.Home(Icons.Default.Home),
         ScreenState.PopularTVShows(icons["tv"]!!)
     )
 
@@ -43,7 +42,7 @@ fun BottomNavigationScreen() {
         Box(modifier = Modifier.padding(paddingValues)) {
             NavHost(navController = navController, startDestination = items[0].route) {
                 composable(items[0].route) { MovieListScreen(navController = navController) }
-                composable(items[1].route) { UpcomingMoviesScreen() }
+                composable(items[1].route) {  }
                 composable(items[2].route) { TvShowsListScreen(navController = navController) }
                 composable(
                     "movieDetail/{movieId}",
