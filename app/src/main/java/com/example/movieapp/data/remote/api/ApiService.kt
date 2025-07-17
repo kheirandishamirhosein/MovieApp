@@ -42,7 +42,10 @@ interface ApiService {
     ): ResultMovie
 
     @GET("movie/upcoming")
-    suspend fun getUpcomingMovies(): MovieResponse
+    suspend fun getUpcomingMovies(
+        @Query("language") language: String = "en-US",
+        @Query("page") page: Int
+    ): MovieResponse
 
     @GET("tv/popular")
     suspend fun getPopularTVShows(

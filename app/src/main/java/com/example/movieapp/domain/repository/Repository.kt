@@ -14,7 +14,7 @@ interface Repository {
     fun getTopRatedMoviesPaging(): Flow<PagingData<ResultMovie>>
     fun getTrendingMoviesPaging(): Flow<PagingData<ResultMovie>>
     suspend fun getMovieDetails(movieId: Int): ResultStates<ResultMovie>
-    suspend fun getUpcomingMovies(): ResultStates<List<ResultMovie>>
+    fun getUpcomingMovies(): Flow<PagingData<ResultMovie>>
     fun getPopularTVShowsPaging(): Flow<PagingData<ResultTVShow>>
     fun getTopRatedTVShowsPaging(): Flow<PagingData<ResultTVShow>>
     suspend fun getOnTheAirTVShows(): ResultStates<List<ResultTVShow>>

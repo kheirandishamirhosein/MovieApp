@@ -56,8 +56,14 @@ class RepositoryImp @Inject constructor(
         return apiWrapper { apiService.getMovieDetails(movieId) }
     }
 
-    override suspend fun getUpcomingMovies(): ResultStates<List<ResultMovie>> {
-        return apiWrapper { apiService.getUpcomingMovies().results }
+    override fun getUpcomingMovies(): Flow<PagingData<ResultMovie>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {UpcomingMoviesPagingSource(apiService)}
+        ).flow
     }
 
     override fun getPopularTVShowsPaging(): Flow<PagingData<ResultTVShow>> {

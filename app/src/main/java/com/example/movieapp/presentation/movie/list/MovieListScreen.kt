@@ -35,6 +35,7 @@ fun MovieListScreen(
     val nowPlayingMovies = viewModel.nowPlayingMovies.collectAsLazyPagingItems()
     val topRatedMovies = viewModel.topRatedMovies.collectAsLazyPagingItems()
     val trendingMovies = viewModel.trendingMovies.collectAsLazyPagingItems()
+    val upcomingMovies = viewModel.upcomingMovies.collectAsLazyPagingItems()
     val similarMovies = viewModel.similarMovies
 
     LaunchedEffect(Unit) {
@@ -42,6 +43,7 @@ fun MovieListScreen(
         viewModel.onEvent(MovieUiEvent.LoadNowPlayingMovies)
         viewModel.onEvent(MovieUiEvent.LoadTopRatedMovies)
         viewModel.onEvent(MovieUiEvent.LoadTrendingMovies)
+        viewModel.onEvent(MovieUiEvent.LoadUpcomingMovies)
     }
 
     val isLoading =
@@ -104,6 +106,14 @@ fun MovieListScreen(
                         MovieSection(
                             title = "Trending",
                             movies = trendingMovies,
+                            onItemClick = { movie ->
+                                navController.navigate("movieDetail/${movie.id}")
+                            }
+                        )
+
+                        MovieSection(
+                          title = "Upcoming",
+                            movies = upcomingMovies,
                             onItemClick = { movie ->
                                 navController.navigate("movieDetail/${movie.id}")
                             }
