@@ -48,25 +48,27 @@ fun TvShowsListScreen(
     }
 
     val isLoading =
-        popularTvShows.loadState.refresh is LoadState.Loading &&
-                topRatedTVShows.loadState.refresh is LoadState.Loading &&
-                trendingTVShows.loadState.refresh is LoadState.Loading &&
+        popularTvShows.loadState.refresh is LoadState.Loading ||
+                topRatedTVShows.loadState.refresh is LoadState.Loading ||
+                trendingTVShows.loadState.refresh is LoadState.Loading ||
                 onTheAirTVShows is ResultStates.Loading
     Scaffold(
         topBar = {
             TopAppBar(title = { Text(text = "TV Shows") })
         },
         content = { paddingValues ->
-            LazyColumn(modifier = Modifier.padding(paddingValues)) {
-                item {
-                    if (isLoading) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    } else {
+            if (isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else {
+                LazyColumn(modifier = Modifier.padding(paddingValues)) {
+                    item {
                         when (onTheAirTVShows) {
                             is ResultStates.Success -> {
                                 val onTheAirTVShowList =
