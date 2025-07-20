@@ -36,7 +36,6 @@ fun MovieListScreen(
     val topRatedMovies = viewModel.topRatedMovies.collectAsLazyPagingItems()
     val trendingMovies = viewModel.trendingMovies.collectAsLazyPagingItems()
     val upcomingMovies = viewModel.upcomingMovies.collectAsLazyPagingItems()
-    val similarMovies = viewModel.similarMovies
 
     LaunchedEffect(Unit) {
         viewModel.onEvent(MovieUiEvent.LoadPopularMovies)
@@ -47,9 +46,10 @@ fun MovieListScreen(
     }
 
     val isLoading =
-        nowPlayingMovies.loadState.refresh is LoadState.Loading &&
-                topRatedMovies.loadState.refresh is LoadState.Loading &&
-                trendingMovies.loadState.refresh is LoadState.Loading &&
+        nowPlayingMovies.loadState.refresh is LoadState.Loading ||
+                topRatedMovies.loadState.refresh is LoadState.Loading ||
+                trendingMovies.loadState.refresh is LoadState.Loading ||
+                upcomingMovies.loadState.refresh is LoadState.Loading ||
                 moviesState is ResultStates.Loading
 
     Scaffold(
@@ -57,21 +57,22 @@ fun MovieListScreen(
             TopAppBar(title = { Text(text = "Movies") })
         },
         content = { paddingValues ->
-            LazyColumn(modifier = Modifier.padding(paddingValues)) {
-                item {
-                    if (isLoading) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    } else {
+            if (isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else {
+                LazyColumn(modifier = Modifier.padding(paddingValues)) {
+                    item {
                         when (moviesState) {
                             is ResultStates.Success -> {
                                 val movies = (moviesState as ResultStates.Success).data
                                 val topMovies = movies.sortedByDescending { it.voteAverage }.take(10)
-
                                 MovieCarousel(movies = topMovies)
                             }
 
@@ -112,18 +113,18 @@ fun MovieListScreen(
                         )
 
                         MovieSection(
-                          title = "Upcoming",
+                            title = "Upcoming",
                             movies = upcomingMovies,
                             onItemClick = { movie ->
                                 navController.navigate("movieDetail/${movie.id}")
                             }
                         )
-
                     }
                 }
             }
         }
     )
+
 }
 
 @Composable
