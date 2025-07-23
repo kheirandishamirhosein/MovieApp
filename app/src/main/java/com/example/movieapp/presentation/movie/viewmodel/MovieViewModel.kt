@@ -19,6 +19,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,7 +31,7 @@ class MovieViewModel @Inject constructor(
     getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase,
     getTrendingMoviesUseCase: GetTrendingMoviesUseCase,
     getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
-    getSimilarMoviesUseCase: GetSimilarMoviesUseCase,
+    private val getSimilarMoviesUseCase: GetSimilarMoviesUseCase,
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     private val getMovieCreditsUseCase: GetMovieCreditsUseCase
 ) : ViewModel() {
@@ -55,9 +57,13 @@ class MovieViewModel @Inject constructor(
     private val _castState = MutableStateFlow<ResultStates<MovieCreditsResponse>>(ResultStates.Loading)
     val castState: StateFlow<ResultStates<MovieCreditsResponse>> = _castState
 
-    val similarMovies: (movieId: Int) -> Flow<PagingData<ResultMovie>> = { movieId ->
-        getSimilarMoviesUseCase(movieId).cachedIn(viewModelScope)
-    }
+    private val _similarMovieId = MutableStateFlow<Int?>(null)
+    val similarMovies: Flow<PagingData<ResultMovie>> = _similarMovieId
+        .filterNotNull()
+        .flatMapLatest { movieId ->
+            getSimilarMoviesUseCase(movieId)
+        }
+        .cachedIn(viewModelScope)
 
     fun onEvent(event: MovieUiEvent) {
         when (event) {
@@ -71,6 +77,10 @@ class MovieViewModel @Inject constructor(
 
             is MovieUiEvent.LoadMovieCredits -> {
                 fetchMovieCredits(event.movieId)
+            }
+
+            is MovieUiEvent.LoadSimilarMovies -> {
+                fetchSimilarMovies(event.movieId)
             }
 
             else -> Unit
@@ -96,6 +106,10 @@ class MovieViewModel @Inject constructor(
             _castState.value = ResultStates.Loading
             _castState.value = getMovieCreditsUseCase(movieId)
         }
+    }
+
+    private fun fetchSimilarMovies(movieId: Int) {
+        _similarMovieId.value = movieId
     }
 
 }
