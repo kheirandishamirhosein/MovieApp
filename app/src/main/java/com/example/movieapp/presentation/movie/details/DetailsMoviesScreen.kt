@@ -1,5 +1,6 @@
 package com.example.movieapp.presentation.movie.details
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -38,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
@@ -58,12 +62,18 @@ fun DetailsMoviesScreen(
 ) {
     val movieDetailState by viewModel.movieDetailState.collectAsState()
     val castState by viewModel.castState.collectAsState()
-    val similarMovies = viewModel.similarMovies(movieId).collectAsLazyPagingItems()
+    val similarMovies = viewModel.similarMovies.collectAsLazyPagingItems()
 
     LaunchedEffect(movieId) {
         viewModel.onEvent(MovieUiEvent.LoadMovieDetails(movieId))
         viewModel.onEvent(MovieUiEvent.LoadMovieCredits(movieId))
+        viewModel.onEvent(MovieUiEvent.LoadSimilarMovies(movieId))
     }
+
+    val isLoading = movieDetailState is ResultStates.Loading ||
+            castState is ResultStates.Loading
+            ||
+            similarMovies.loadState.refresh is LoadState.Loading
 
     Scaffold(
         topBar = {
@@ -77,132 +87,149 @@ fun DetailsMoviesScreen(
             )
         }
     ) { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)) {
-            when (movieDetailState) {
-                is ResultStates.Loading -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
-
-                is ResultStates.Success -> {
-                    val movie = (movieDetailState as ResultStates.Success<ResultMovie>).data
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                            .padding(16.dp)
-                    ) {
-                        Card(
-                            shape = RoundedCornerShape(16.dp),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp)
-                        ) {
-                            Image(
-                                painter = rememberImagePainter("https://image.tmdb.org/t/p/w500${movie.backdropPath}"),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = movie.originalTitle,
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "Release Date: ${movie.releaseDate}",
-                                fontSize = 14.sp,
-                                color = Color.Magenta
-                            )
-                            Text(
-                                text = "Popularity: ${movie.popularity}",
-                                fontSize = 14.sp,
-                                color = Color.Magenta
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = movie.overview,
-                            fontSize = 16.sp
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                Icons.Default.Star,
-                                contentDescription = "Vote",
-                                tint = Color.Yellow
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text("Rating: ${movie.voteAverage.voteAverageFormatted()} (${movie.voteCount} votes)")
-                        }
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        when (castState) {
-                            is ResultStates.Success -> {
-                                val credits =
-                                    (castState as ResultStates.Success<MovieCreditsResponse>).data
-
-                                Text(
-                                    text = "Cast",
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(start = 8.dp)
-                                )
-
-                                Spacer(modifier = Modifier.height(8.dp))
-
-                                CastList(castList = credits.cast ?: emptyList())
-                            }
-
-                            else -> {}
-                        }
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        when (castState) {
-                            is ResultStates.Success -> {
-                                Text(
-                                    text = "Similar Movies",
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(start = 8.dp)
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
-                                MovieList(
-                                    movies = similarMovies, onItemClick = {
-                                        navController.navigate("movieDetail/${it.id}")
-                                    }
-                                )
-                            }
-                            else -> {}
-                        }
-                    }
-                }
-
-                is ResultStates.Error -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.TopCenter
-                    ) {
-                        Text("Error: ${(movieDetailState as ResultStates.Error).exception.message}")
-                    }
+        if (isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            LazyColumn(modifier = Modifier.padding(paddingValues)) {
+                item {
+                    Log.d("SimilarMoviesUI", "LoadState.refresh = ${similarMovies.loadState.refresh}")
+                    Log.d("SimilarMoviesUI", "Loaded items: ${similarMovies.itemCount}")
+                    MovieDetailsSection(movieDetailState)
+                    Spacer(modifier = Modifier.height(24.dp))
+                    CastSection(castState)
+                    Spacer(modifier = Modifier.height(24.dp))
+                    SimilarMoviesSection(
+                        similarMovies = similarMovies,
+                        navController = navController
+                    )
                 }
             }
         }
     }
+}
 
+@Composable
+fun MovieDetailsSection(movieDetailState: ResultStates<ResultMovie>) {
+    val movie = (movieDetailState as ResultStates.Success).data
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        Card(
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+        ) {
+            Image(
+                painter = rememberImagePainter("https://image.tmdb.org/t/p/w500${movie.backdropPath}"),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = movie.originalTitle,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Release Date: ${movie.releaseDate}",
+                fontSize = 14.sp,
+                color = Color.Magenta
+            )
+            Text(
+                text = "Popularity: ${movie.popularity}",
+                fontSize = 14.sp,
+                color = Color.Magenta
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = movie.overview,
+            fontSize = 16.sp
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                Icons.Default.Star,
+                contentDescription = "Vote",
+                tint = Color.Yellow
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text("Rating: ${movie.voteAverage.voteAverageFormatted()} (${movie.voteCount} votes)")
+        }
+    }
+}
+
+@Composable
+fun CastSection(castState: ResultStates<MovieCreditsResponse>) {
+    val cast = (castState as ResultStates.Success).data.cast ?: emptyList()
+
+    Column {
+        Text(
+            text = "Cast",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(start = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        CastList(castList = cast)
+    }
+}
+
+@Composable
+fun SimilarMoviesSection(
+    similarMovies: LazyPagingItems<ResultMovie>,
+    navController: NavController
+) {
+    Column {
+        Text(
+            text = "Similar Movies",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(start = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        when(similarMovies.loadState.refresh) {
+            is LoadState.Error -> {
+                Text(
+                    text = "Error loading similar movies: " +
+                            "${(similarMovies.loadState.refresh as LoadState.Error).error.message}",
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+            else -> {
+                MovieList(
+                    movies = similarMovies,
+                    onItemClick = { movie ->
+                        navController.navigate("movieDetail/${movie.id}")
+                    }
+                )
+            }
+        }
+    }
 }
