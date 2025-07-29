@@ -61,6 +61,10 @@ class TvShowViewModel @Inject constructor(
         }
         .cachedIn(viewModelScope)
 
+    private val _isLiked = MutableStateFlow(false)
+    val isLiked: StateFlow<Boolean> = _isLiked
+
+
     fun onEvent(event: TvShowsUiEvent) {
         when(event) {
 
@@ -107,6 +111,10 @@ class TvShowViewModel @Inject constructor(
 
     private fun fetchSimilarTVShows(tvShowId: Int) {
         _similarTVShowId.value = tvShowId
+    }
+
+    fun toggleLike() {
+        _isLiked.value = !_isLiked.value
     }
 }
 
