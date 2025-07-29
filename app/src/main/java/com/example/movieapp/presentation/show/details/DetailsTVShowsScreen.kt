@@ -11,9 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
@@ -38,11 +37,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.data.remote.model.tvShow.details.TVShowCreditsResponse
-import com.example.movieapp.presentation.movie.list.MovieList
 import com.example.movieapp.presentation.show.lists.TVShowList
 import com.example.movieapp.presentation.state.ResultStates
 import com.example.movieapp.presentation.show.viewmodel.TvShowViewModel
@@ -59,13 +59,18 @@ fun DetailsTVShowsScreen(
 
     val detailsTVShow by viewModel.tvShowDetailsState.collectAsState()
     val castState by viewModel.castState.collectAsState()
-    val similarTVShows = viewModel.similarTVShows(tvShowId).collectAsLazyPagingItems()
+    val similarTVShow = viewModel.similarTVShows.collectAsLazyPagingItems()
 
     LaunchedEffect(tvShowId) {
         viewModel.onEvent(TvShowsUiEvent.LoadTvShowDetails(tvShowId))
         viewModel.onEvent(TvShowsUiEvent.LoadTVShowCredits(tvShowId))
         viewModel.onEvent(TvShowsUiEvent.LoadSimilarTVShows(tvShowId))
     }
+
+    val isLoading = detailsTVShow is ResultStates.Loading ||
+            castState is ResultStates.Loading
+            ||
+            similarTVShow.loadState.refresh is LoadState.Loading
 
     Scaffold(
         topBar = {
@@ -79,144 +84,149 @@ fun DetailsTVShowsScreen(
             )
         }
     ) { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)) {
-            when (detailsTVShow) {
-                is ResultStates.Loading -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
-
-                is ResultStates.Success -> {
-                    val tvShow = (detailsTVShow as ResultStates.Success<ResultTVShow>).data
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                            .padding(16.dp)
-                    ) {
-                        Card(
-                            shape = RoundedCornerShape(16.dp),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp)
-                        ) {
-                            Image(
-                                painter = rememberImagePainter("https://image.tmdb.org/t/p/w500${tvShow.backdropPath}"),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = tvShow.originalName,
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "Release Date: ${tvShow.firstAirDate}",
-                                fontSize = 14.sp,
-                                color = Color.Magenta
-                            )
-                            Text(
-                                text = "Popularity: ${tvShow.popularity}",
-                                fontSize = 14.sp,
-                                color = Color.Magenta
-                            )
-                        }
-
-
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = tvShow.overview,
-                            fontSize = 16.sp
-                        )
-
-
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                Icons.Default.Star,
-                                contentDescription = "Vote",
-                                tint = Color.Yellow
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                "Rating: ${tvShow.voteAverage.voteAverageFormatted()} " +
-                                        "(${tvShow.voteCount} votes)"
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        Text(
-                            text = "Cast",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        when (castState) {
-                            is ResultStates.Loading -> {
-                                CircularProgressIndicator()
-                            }
-
-                            is ResultStates.Success -> {
-                                val credits =
-                                    (castState as ResultStates.Success<TVShowCreditsResponse>).data
-                                CastList(castList = credits.cast ?: emptyList())
-                            }
-
-                            is ResultStates.Error -> {
-                                Text("Failed to load cast", color = Color.Red)
-                            }
-                        }
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        when(castState) {
-                            is ResultStates.Success -> {
-                                Text(
-                                    text = "Similar TV Shows",
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(start = 8.dp)
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
-                                TVShowList(
-                                    tvShows = similarTVShows, onItemClick = {
-                                        navController.navigate("tvShowsDetail/${it.id}")
-                                    }
-                                )
-                            }
-                            else -> {}
-                        }
-                    }
-                }
-
-                is ResultStates.Error -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.TopCenter
-                    ) {
-                        Text("Error: ${(detailsTVShow as ResultStates.Error).exception.message}")
-                    }
+        if (isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            LazyColumn(modifier = Modifier.padding(paddingValues)) {
+                item {
+                    TVShowDetailsSection(detailsTVShow)
+                    Spacer(modifier = Modifier.height(24.dp))
+                    CastSection(castState)
+                    Spacer(modifier = Modifier.height(24.dp))
+                    SimilarTVShowSection(
+                        similarTVShow = similarTVShow,
+                        navController = navController
+                    )
                 }
             }
         }
     }
+}
 
+@Composable
+fun TVShowDetailsSection(tvShowDetailState: ResultStates<ResultTVShow>) {
+    val tvShow = (tvShowDetailState as ResultStates.Success).data
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        Card(
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+        ) {
+            Image(
+                painter = rememberImagePainter("https://image.tmdb.org/t/p/w500${tvShow.backdropPath}"),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = tvShow.originalName,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Release Date: ${tvShow.firstAirDate}",
+                fontSize = 14.sp,
+                color = Color.Magenta
+            )
+            Text(
+                text = "Popularity: ${tvShow.popularity}",
+                fontSize = 14.sp,
+                color = Color.Magenta
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = tvShow.overview,
+            fontSize = 16.sp
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                Icons.Default.Star,
+                contentDescription = "Vote",
+                tint = Color.Yellow
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text("Rating: ${tvShow.voteAverage.voteAverageFormatted()} (${tvShow.voteCount} votes)")
+        }
+    }
+}
+
+
+@Composable
+fun CastSection(castState: ResultStates<TVShowCreditsResponse>) {
+    val cast = (castState as ResultStates.Success).data.cast ?: emptyList()
+
+    Column {
+        Text(
+            text = "Cast",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(start = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        CastList(castList = cast)
+    }
+}
+
+@Composable
+fun SimilarTVShowSection(
+    similarTVShow: LazyPagingItems<ResultTVShow>,
+    navController: NavController
+) {
+    Column {
+        Text(
+            text = "Similar TV Shows",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(start = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        when (similarTVShow.loadState.refresh) {
+            is LoadState.Error -> {
+                Text(
+                    text = "Error loading similar tv Shows: " +
+                            "${(similarTVShow.loadState.refresh as LoadState.Error).error.message}",
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+
+            else -> {
+                TVShowList(
+                    tvShows = similarTVShow,
+                    onItemClick = { tvShow ->
+                        navController.navigate("tvShowsDetail/${tvShow.id}")
+                    }
+                )
+            }
+        }
+    }
 }
