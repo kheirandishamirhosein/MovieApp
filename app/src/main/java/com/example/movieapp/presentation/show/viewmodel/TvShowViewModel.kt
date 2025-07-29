@@ -18,6 +18,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,7 +29,7 @@ class TvShowViewModel @Inject constructor(
     private val getOnTheAirTVShowsUseCase: GetOnTheAirTVShowsUseCase,
     getTopRatedTVShowsUseCase: GetTopRatedTVShowsUseCase,
     getTrendingTVShowsUseCase: GetTrendingTVShowsUseCase,
-    getSimilarTVShowsUseCase: GetSimilarTVShowsUseCase,
+    private val getSimilarTVShowsUseCase: GetSimilarTVShowsUseCase,
     private val getTvShowDetailsUseCase: GetTvShowDetailsUseCase,
     private val getMovieCreditsUseCase: GetTVShowCreditsUseCase
 ): ViewModel() {
@@ -51,9 +53,13 @@ class TvShowViewModel @Inject constructor(
     private val _castState = MutableStateFlow<ResultStates<TVShowCreditsResponse>>(ResultStates.Loading)
     val castState: StateFlow<ResultStates<TVShowCreditsResponse>> = _castState
 
-    val similarTVShows: (tvId: Int) ->  Flow<PagingData<ResultTVShow>> = { tvId ->
-        getSimilarTVShowsUseCase(tvId).cachedIn(viewModelScope)
-    }
+    private val _similarTVShowId = MutableStateFlow<Int?>(null)
+    val similarTVShows: Flow<PagingData<ResultTVShow>> = _similarTVShowId
+        .filterNotNull()
+        .flatMapLatest { tvShowId ->
+            getSimilarTVShowsUseCase(tvShowId)
+        }
+        .cachedIn(viewModelScope)
 
     fun onEvent(event: TvShowsUiEvent) {
         when(event) {
@@ -68,6 +74,10 @@ class TvShowViewModel @Inject constructor(
 
             is TvShowsUiEvent.LoadTVShowCredits -> {
                 fetchTVShowCredits(event.tvShowId)
+            }
+
+            is TvShowsUiEvent.LoadSimilarTVShows -> {
+                fetchSimilarTVShows(event.tvShowId)
             }
 
             else -> Unit
@@ -93,6 +103,10 @@ class TvShowViewModel @Inject constructor(
             _castState.value = ResultStates.Loading
             _castState.value = getMovieCreditsUseCase(tvShowId)
         }
+    }
+
+    private fun fetchSimilarTVShows(tvShowId: Int) {
+        _similarTVShowId.value = tvShowId
     }
 }
 
