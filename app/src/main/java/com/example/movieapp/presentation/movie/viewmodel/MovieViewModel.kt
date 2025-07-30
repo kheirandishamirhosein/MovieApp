@@ -65,6 +65,9 @@ class MovieViewModel @Inject constructor(
         }
         .cachedIn(viewModelScope)
 
+    private val _isLiked = MutableStateFlow(false)
+    val isLiked: StateFlow<Boolean> = _isLiked
+
     fun onEvent(event: MovieUiEvent) {
         when (event) {
             is MovieUiEvent.LoadPopularMovies -> {
@@ -110,6 +113,10 @@ class MovieViewModel @Inject constructor(
 
     private fun fetchSimilarMovies(movieId: Int) {
         _similarMovieId.value = movieId
+    }
+
+    fun toggleLike() {
+        _isLiked.value = !_isLiked.value
     }
 
 }
