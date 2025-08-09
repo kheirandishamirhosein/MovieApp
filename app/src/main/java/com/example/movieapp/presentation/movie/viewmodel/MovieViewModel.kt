@@ -14,6 +14,9 @@ import com.example.movieapp.domain.usecase.movie.GetTopRatedMoviesUseCase
 import com.example.movieapp.domain.usecase.movie.GetTrendingMoviesUseCase
 import com.example.movieapp.domain.usecase.movie.GetUpcomingMoviesUseCase
 import com.example.movieapp.domain.usecase.movie.PopularMovieListUseCase
+import com.example.movieapp.domain.usecase.movie.like.IsMovieLikedUseCase
+import com.example.movieapp.domain.usecase.movie.like.LikeMovieUseCase
+import com.example.movieapp.domain.usecase.movie.like.UnlikeMovieUseCase
 import com.example.movieapp.presentation.state.ResultStates
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -33,8 +36,13 @@ class MovieViewModel @Inject constructor(
     getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
     private val getSimilarMoviesUseCase: GetSimilarMoviesUseCase,
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
-    private val getMovieCreditsUseCase: GetMovieCreditsUseCase
+    private val getMovieCreditsUseCase: GetMovieCreditsUseCase,
+    private val likeMovieUseCase: LikeMovieUseCase,
+    private val unlikeMovieUseCase: UnlikeMovieUseCase,
+    private val isMovieLikedUseCase: IsMovieLikedUseCase,
 ) : ViewModel() {
+
+    private var currentMovieId: Int? = null
 
     private val _popularMoviesState = MutableStateFlow<ResultStates<List<ResultMovie>>>(ResultStates.Loading)
     val popularMoviesState: StateFlow<ResultStates<List<ResultMovie>>> = _popularMoviesState
@@ -99,8 +107,10 @@ class MovieViewModel @Inject constructor(
 
     private fun fetchMovieDetails(movieId: Int) {
         viewModelScope.launch {
+            currentMovieId = movieId
             _movieDetailState.value = ResultStates.Loading
             _movieDetailState.value = getMovieDetailsUseCase(movieId)
+            _isLiked.value = isMovieLikedUseCase(movieId)
         }
     }
 
@@ -115,8 +125,16 @@ class MovieViewModel @Inject constructor(
         _similarMovieId.value = movieId
     }
 
-    fun toggleLike() {
-        _isLiked.value = !_isLiked.value
+    fun toggleLike(movieId: Int) {
+        viewModelScope.launch {
+            val currentlyLiked = isMovieLikedUseCase(movieId)
+            if (currentlyLiked) {
+                unlikeMovieUseCase(movieId)
+            } else {
+                likeMovieUseCase(movieId)
+            }
+            _isLiked.value = !currentlyLiked
+        }
     }
 
 }
