@@ -3,6 +3,8 @@ package com.example.movieapp.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.example.movieapp.data.local.LikedMovieDao
+import com.example.movieapp.data.local.LikedMovieEntity
 import com.example.movieapp.data.remote.api.ApiService
 import com.example.movieapp.data.remote.model.movie.MovieCreditsResponse
 import com.example.movieapp.util.apiWrapper
@@ -15,7 +17,8 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RepositoryImp @Inject constructor(
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val likedMovieDao: LikedMovieDao
 ) : Repository{
 
     override suspend fun getPopularMovies(): ResultStates<List<ResultMovie>> {
@@ -131,6 +134,18 @@ class RepositoryImp @Inject constructor(
             ),
             pagingSourceFactory = { SimilarTVShowsPagingSource(apiService, tvId) }
         ).flow
+    }
+
+    override suspend fun likeMovie(movieId: Int) {
+        likedMovieDao.likeMovie(LikedMovieEntity(movieId))
+    }
+
+    override suspend fun unlikeMovie(movieId: Int) {
+        likedMovieDao.unlikeMovie(LikedMovieEntity(movieId))
+    }
+
+    override suspend fun isMovieLiked(movieId: Int): Boolean {
+        return likedMovieDao.isMovieLiked(movieId)
     }
 
 }
