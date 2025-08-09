@@ -4,8 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.movieapp.data.remote.model.MediaType
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.data.remote.model.tvShow.details.TVShowCreditsResponse
+import com.example.movieapp.domain.usecase.like.IsItemLikedUseCase
+import com.example.movieapp.domain.usecase.like.LikeItemUseCase
+import com.example.movieapp.domain.usecase.like.UnlikeItemUseCase
 import com.example.movieapp.domain.usecase.show.GetOnTheAirTVShowsUseCase
 import com.example.movieapp.domain.usecase.show.GetPopularTVShowsUseCase
 import com.example.movieapp.domain.usecase.show.GetSimilarTVShowsUseCase
@@ -31,8 +35,13 @@ class TvShowViewModel @Inject constructor(
     getTrendingTVShowsUseCase: GetTrendingTVShowsUseCase,
     private val getSimilarTVShowsUseCase: GetSimilarTVShowsUseCase,
     private val getTvShowDetailsUseCase: GetTvShowDetailsUseCase,
-    private val getMovieCreditsUseCase: GetTVShowCreditsUseCase
+    private val getMovieCreditsUseCase: GetTVShowCreditsUseCase,
+    private val likeItemUseCase: LikeItemUseCase,
+    private val unlikeItemUseCase: UnlikeItemUseCase,
+    private val isItemLikedUseCase: IsItemLikedUseCase,
 ): ViewModel() {
+
+    private var currentTVSowId: Int? = null
 
     val popularTVShows: Flow<PagingData<ResultTVShow>> =
         getPopularTVShowsUseCase()
@@ -97,8 +106,10 @@ class TvShowViewModel @Inject constructor(
 
     private fun fetchTvShowDetails(tvShowId: Int) {
         viewModelScope.launch {
+            currentTVSowId = tvShowId
             _tvShowDetailsState.value = ResultStates.Loading
             _tvShowDetailsState.value = getTvShowDetailsUseCase(tvShowId)
+            _isLiked.value = isItemLikedUseCase(itemId = tvShowId, type = MediaType.TV)
         }
     }
 
@@ -113,9 +124,18 @@ class TvShowViewModel @Inject constructor(
         _similarTVShowId.value = tvShowId
     }
 
-    fun toggleLike() {
-        _isLiked.value = !_isLiked.value
+    fun toggleLike(tvId: Int, type: MediaType) {
+        viewModelScope.launch {
+            val currentlyLiked = isItemLikedUseCase(itemId = tvId, type = type)
+            if (currentlyLiked) {
+                unlikeItemUseCase(itemId = tvId, type = type)
+            } else {
+                likeItemUseCase(itemId = tvId, type = type)
+            }
+            _isLiked.value = !currentlyLiked
+        }
     }
+
 }
 
 sealed class TvShowsUiEvent {

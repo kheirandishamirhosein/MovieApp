@@ -52,6 +52,7 @@ import androidx.compose.runtime.setValue
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberImagePainter
+import com.example.movieapp.data.remote.model.MediaType
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.data.remote.model.tvShow.details.TVShowCreditsResponse
 import com.example.movieapp.presentation.show.lists.TVShowList
@@ -113,7 +114,7 @@ fun DetailsTVShowsScreen(
                     TVShowDetailsSection(
                         tvShowDetailState = detailsTVShow,
                         isLiked = isLiked,
-                        onLikeClick = {viewModel.toggleLike()}
+                        onLikeClick = {viewModel.toggleLike(tvId = tvShowId, MediaType.TV)}
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     CastSection(castState)
