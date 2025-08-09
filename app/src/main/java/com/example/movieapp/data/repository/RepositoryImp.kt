@@ -3,8 +3,8 @@ package com.example.movieapp.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.example.movieapp.data.local.LikedMovieDao
-import com.example.movieapp.data.local.LikedMovieEntity
+import com.example.movieapp.data.local.dao.LikedItemDao
+import com.example.movieapp.data.local.entity.LikedItemEntity
 import com.example.movieapp.data.remote.api.ApiService
 import com.example.movieapp.data.remote.model.movie.MovieCreditsResponse
 import com.example.movieapp.util.apiWrapper
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class RepositoryImp @Inject constructor(
     private val apiService: ApiService,
-    private val likedMovieDao: LikedMovieDao
+    private val likedMovieDao: LikedItemDao
 ) : Repository{
 
     override suspend fun getPopularMovies(): ResultStates<List<ResultMovie>> {
@@ -136,16 +136,16 @@ class RepositoryImp @Inject constructor(
         ).flow
     }
 
-    override suspend fun likeMovie(movieId: Int) {
-        likedMovieDao.likeMovie(LikedMovieEntity(movieId))
+    override suspend fun likeItem(itemId: Int, type: String) {
+        likedMovieDao.likeItem(LikedItemEntity(itemId = itemId, type = type))
     }
 
-    override suspend fun unlikeMovie(movieId: Int) {
-        likedMovieDao.unlikeMovie(LikedMovieEntity(movieId))
+    override suspend fun unlikeItem(itemId: Int, type: String) {
+        likedMovieDao.unlikeItem(LikedItemEntity(itemId = itemId, type = type))
     }
 
-    override suspend fun isMovieLiked(movieId: Int): Boolean {
-        return likedMovieDao.isMovieLiked(movieId)
+    override suspend fun isItemLiked(itemId: Int, type: String): Boolean {
+        return likedMovieDao.isItemLiked(itemId = itemId, type = type)
     }
 
 }
