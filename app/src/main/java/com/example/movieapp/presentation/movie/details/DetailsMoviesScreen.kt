@@ -54,6 +54,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import com.example.movieapp.data.remote.model.MediaType
 import com.example.movieapp.data.remote.model.movie.MovieCreditsResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.presentation.movie.list.MovieList
@@ -115,7 +116,7 @@ fun DetailsMoviesScreen(
                     MovieDetailsSection(
                         movieDetailState = movieDetailState,
                         isLiked = isLiked,
-                        onLikeClick = {viewModel.toggleLike(movieId = movieId)}
+                        onLikeClick = {viewModel.toggleLike(movieId = movieId, type = MediaType.MOVIE)}
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     CastSection(castState)
