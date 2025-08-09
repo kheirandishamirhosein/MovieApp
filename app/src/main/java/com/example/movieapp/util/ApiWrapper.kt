@@ -14,10 +14,10 @@ suspend fun <T> apiWrapper(call: suspend () -> T): ResultStates<T> {
     return withContext(Dispatchers.IO + exceptionHandler) {
         try {
             val response = call()
-            //Log.d("success response", response.toString())
+            Log.d("success response", response.toString())
             ResultStates.Success(response)
         } catch (ex: Exception) {
-            //Log.e("error response", ex.message.toString())
+            Log.e("error response", ex.message.toString())
             ResultStates.Error(ex)
         }
     }

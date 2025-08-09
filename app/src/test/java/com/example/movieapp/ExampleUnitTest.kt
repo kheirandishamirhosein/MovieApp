@@ -4,9 +4,9 @@ import app.cash.turbine.test
 import com.example.movieapp.data.remote.api.ApiService
 import com.example.movieapp.data.remote.model.movie.MovieResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
-import com.example.movieapp.data.repository.Repository
+import com.example.movieapp.data.repository.RepositoryImp
 import com.example.movieapp.presentation.movie.details.MovieDetailViewModel
-import com.example.movieapp.presentation.movie.list.MovieViewModel
+import com.example.movieapp.presentation.movie.viewmodel.MovieViewModel
 import com.example.movieapp.presentation.state.ResultStates
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -37,7 +37,7 @@ class RepositoryTest {
     private val apiService: ApiService = mockk()
 
     // Repository instance
-    private val repository = Repository(apiService)
+    private val repositoryImp = RepositoryImp(apiService)
 
     @Test
     fun `getPopularMovies emits Success when api call is successful`() = runTest {
@@ -84,7 +84,7 @@ class RepositoryTest {
         coEvery { apiService.getPopularMovies() } returns movieResponse
 
         // Use Turbine to test the Flow
-        repository.getPopularMovies().test {
+        repositoryImp.getPopularMovies().test {
             // Assert that Success is emitted with the expected data
             assertEquals(
                 ResultStates.Success(movieResponse),
@@ -104,7 +104,7 @@ class RepositoryTest {
         coEvery { apiService.getPopularMovies() } throws exception
 
         // Use Turbine to test the Flow
-        repository.getPopularMovies().test {
+        repositoryImp.getPopularMovies().test {
             // Assert that Error is emitted with the expected exception
             assertEquals(
                 ResultStates.Error(exception),
@@ -123,15 +123,15 @@ class RepositoryTest {
 class MovieViewModelTest {
 
     private val dispatcher = StandardTestDispatcher()
-    private lateinit var repository: Repository
+    private lateinit var repositoryImp: RepositoryImp
     private lateinit var viewModel: MovieViewModel
     private val testScope = TestCoroutineScope(dispatcher)
 
     @Before
     fun setup() {
         Dispatchers.setMain(dispatcher)  // Set the main dispatcher to our test dispatcher
-        repository = mockk()
-        viewModel = MovieViewModel(repository)
+        repositoryImp = mockk()
+        viewModel = MovieViewModel(repositoryImp)
     }
 
     @After
@@ -167,7 +167,7 @@ class MovieViewModelTest {
                 totalResults = 1
             )
 
-            coEvery { repository.getPopularMovies() } returns flow {
+            coEvery { repositoryImp.getPopularMovies() } returns flow {
                 emit(ResultStates.Loading)
                 emit(ResultStates.Success(mockMovieResponse))
             }
@@ -185,7 +185,7 @@ class MovieViewModelTest {
         testScope.runTest {
             // Arrange
             val exception = Exception("Network error")
-            coEvery { repository.getPopularMovies() } returns flow {
+            coEvery { repositoryImp.getPopularMovies() } returns flow {
                 emit(ResultStates.Loading)
                 emit(ResultStates.Error(exception))
             }
@@ -205,15 +205,15 @@ class MovieViewModelTest {
 class MovieDetailViewModelTest {
 
     private val dispatcher = StandardTestDispatcher()
-    private lateinit var repository: Repository
+    private lateinit var repositoryImp: RepositoryImp
     private lateinit var viewModel: MovieDetailViewModel
     private val testScope = TestCoroutineScope(dispatcher)
 
     @Before
     fun setup() {
         Dispatchers.setMain(dispatcher)  // Set the main dispatcher to our test dispatcher
-        repository = mockk()
-        viewModel = MovieDetailViewModel(repository)
+        repositoryImp = mockk()
+        viewModel = MovieDetailViewModel(repositoryImp)
     }
 
     @After
@@ -243,7 +243,7 @@ class MovieDetailViewModelTest {
                 voteCount = 100
             )
 
-            coEvery { repository.getMovieDetails(movieId) } returns flowOf(
+            coEvery { repositoryImp.getMovieDetails(movieId) } returns flowOf(
                 ResultStates.Success(mockResultMovie)
             )
 
@@ -266,7 +266,7 @@ class MovieDetailViewModelTest {
             // Arrange
             val movieId = 1
             val exception = Exception("Network error")
-            coEvery { repository.getMovieDetails(movieId) } returns flowOf(
+            coEvery { repositoryImp.getMovieDetails(movieId) } returns flowOf(
                 ResultStates.Error(exception)
             )
 
