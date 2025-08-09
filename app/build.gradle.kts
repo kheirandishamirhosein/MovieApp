@@ -111,9 +111,9 @@ dependencies {
     //Animation
     implementation("androidx.compose.animation:animation-core:1.8.2")
     //Room
-//    implementation("androidx.room:room-runtime:2.6.1")
-//    kapt("androidx.room:room-compiler:2.6.1")
-//    implementation("androidx.room:room-ktx:2.6.1")
+    implementation("androidx.room:room-runtime:2.7.2")
+    kapt("androidx.room:room-compiler:2.7.2")
+    implementation("androidx.room:room-ktx:2.7.2")
     //paging 3
     implementation("androidx.paging:paging-compose:3.3.6")
 
