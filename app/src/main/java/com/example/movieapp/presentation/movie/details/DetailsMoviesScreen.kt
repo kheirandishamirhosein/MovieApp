@@ -111,12 +111,11 @@ fun DetailsMoviesScreen(
         } else {
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 item {
-                    Log.d("SimilarMoviesUI", "LoadState.refresh = ${similarMovies.loadState.refresh}")
-                    Log.d("SimilarMoviesUI", "Loaded items: ${similarMovies.itemCount}")
+                    Log.d("isLiked", "$isLiked")
                     MovieDetailsSection(
                         movieDetailState = movieDetailState,
                         isLiked = isLiked,
-                        onLikeClick = {viewModel.toggleLike()}
+                        onLikeClick = {viewModel.toggleLike(movieId = movieId)}
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     CastSection(castState)
