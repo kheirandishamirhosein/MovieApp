@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.movieapp.data.local.entity.LikedItemEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LikedItemDao {
@@ -18,4 +19,11 @@ interface LikedItemDao {
 
     @Query("SELECT EXISTS(SELECT 1 FROM liked_items WHERE itemId = :itemId AND type = :type)")
     suspend fun isItemLiked(itemId: Int, type: String): Boolean
+
+    @Query("SELECT * FROM liked_items WHERE type = 'movie'")
+    fun getLikedMovies(): Flow<List<LikedItemEntity>>
+
+    @Query("SELECT * FROM liked_items WHERE type = 'tv'")
+    fun getLikedTVShows(): Flow<List<LikedItemEntity>>
+
 }
