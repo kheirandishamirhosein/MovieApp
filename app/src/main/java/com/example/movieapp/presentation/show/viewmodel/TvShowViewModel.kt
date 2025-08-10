@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.movieapp.data.local.entity.LikedItemEntity
 import com.example.movieapp.data.remote.model.MediaType
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.data.remote.model.tvShow.details.TVShowCreditsResponse
@@ -124,13 +125,33 @@ class TvShowViewModel @Inject constructor(
         _similarTVShowId.value = tvShowId
     }
 
-    fun toggleLike(tvId: Int, type: MediaType) {
+    fun toggleLike(tvShow: ResultTVShow, type: MediaType) {
         viewModelScope.launch {
-            val currentlyLiked = isItemLikedUseCase(itemId = tvId, type = type)
+            val currentlyLiked = isItemLikedUseCase(itemId = tvShow.id, type = type)
             if (currentlyLiked) {
-                unlikeItemUseCase(itemId = tvId, type = type)
+                unlikeItemUseCase(
+                    LikedItemEntity(
+                        itemId = tvShow.id,
+                        type = type.value,
+                        title = tvShow.name,
+                        posterPath = tvShow.posterPath,
+                        releaseDate = tvShow.firstAirDate,
+                        overview = tvShow.overview,
+                        voteAverage = tvShow.voteAverage
+                    )
+                )
             } else {
-                likeItemUseCase(itemId = tvId, type = type)
+                likeItemUseCase(
+                    LikedItemEntity(
+                        itemId = tvShow.id,
+                        type = type.value,
+                        title = tvShow.name,
+                        posterPath = tvShow.posterPath,
+                        releaseDate = tvShow.firstAirDate,
+                        overview = tvShow.overview,
+                        voteAverage = tvShow.voteAverage
+                    )
+                )
             }
             _isLiked.value = !currentlyLiked
         }

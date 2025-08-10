@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.movieapp.data.local.entity.LikedItemEntity
 import com.example.movieapp.data.remote.model.MediaType
 import com.example.movieapp.data.remote.model.movie.MovieCreditsResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
@@ -126,17 +127,38 @@ class MovieViewModel @Inject constructor(
         _similarMovieId.value = movieId
     }
 
-    fun toggleLike(movieId: Int, type: MediaType) {
+    fun toggleLike(movie: ResultMovie, type: MediaType) {
         viewModelScope.launch {
-            val currentlyLiked = isItemLikedUseCase(itemId = movieId, type = type)
+            val currentlyLiked = isItemLikedUseCase(itemId = movie.id, type = type)
             if (currentlyLiked) {
-                unlikeItemUseCase(itemId = movieId, type = type)
+                unlikeItemUseCase(
+                    LikedItemEntity(
+                        itemId = movie.id,
+                        type = type.value,
+                        title = movie.title,
+                        posterPath = movie.posterPath,
+                        releaseDate = movie.releaseDate,
+                        overview = movie.overview,
+                        voteAverage = movie.voteAverage
+                    )
+                )
             } else {
-                likeItemUseCase(itemId = movieId, type = type)
+                likeItemUseCase(
+                    LikedItemEntity(
+                        itemId = movie.id,
+                        type = type.value,
+                        title = movie.title,
+                        posterPath = movie.posterPath,
+                        releaseDate = movie.releaseDate,
+                        overview = movie.overview,
+                        voteAverage = movie.voteAverage
+                    )
+                )
             }
             _isLiked.value = !currentlyLiked
         }
     }
+
 
 }
 
