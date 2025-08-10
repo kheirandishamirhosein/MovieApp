@@ -116,7 +116,9 @@ fun DetailsMoviesScreen(
                     MovieDetailsSection(
                         movieDetailState = movieDetailState,
                         isLiked = isLiked,
-                        onLikeClick = {viewModel.toggleLike(movieId = movieId, type = MediaType.MOVIE)}
+                        onLikeClick = { movie ->
+                            viewModel.toggleLike(movie, MediaType.MOVIE)
+                        }
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     CastSection(castState)
@@ -135,7 +137,7 @@ fun DetailsMoviesScreen(
 fun MovieDetailsSection(
     movieDetailState: ResultStates<ResultMovie>,
     isLiked: Boolean,
-    onLikeClick: () -> Unit
+    onLikeClick: (ResultMovie) -> Unit
     ) {
 
     val movie = (movieDetailState as ResultStates.Success).data
@@ -143,7 +145,7 @@ fun MovieDetailsSection(
     val coroutineScope = rememberCoroutineScope()
 
     val onLikeClicked = {
-        onLikeClick()
+        onLikeClick(movie)
         showLikeMessage = true
         coroutineScope.launch {
             delay(3000)

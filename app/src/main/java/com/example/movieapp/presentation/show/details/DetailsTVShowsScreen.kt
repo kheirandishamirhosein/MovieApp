@@ -114,7 +114,9 @@ fun DetailsTVShowsScreen(
                     TVShowDetailsSection(
                         tvShowDetailState = detailsTVShow,
                         isLiked = isLiked,
-                        onLikeClick = {viewModel.toggleLike(tvId = tvShowId, MediaType.TV)}
+                        onLikeClick = { tvShow ->
+                            viewModel.toggleLike(tvShow = tvShow, MediaType.TV)
+                        }
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     CastSection(castState)
@@ -133,14 +135,14 @@ fun DetailsTVShowsScreen(
 fun TVShowDetailsSection(
     tvShowDetailState: ResultStates<ResultTVShow>,
     isLiked: Boolean,
-    onLikeClick: () -> Unit
+    onLikeClick: (ResultTVShow) -> Unit
 ) {
     val tvShow = (tvShowDetailState as ResultStates.Success).data
     var showLikeMessage by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
     val onLikeClicked = {
-        onLikeClick()
+        onLikeClick(tvShow)
         showLikeMessage = true
         coroutineScope.launch {
             delay(3000)
