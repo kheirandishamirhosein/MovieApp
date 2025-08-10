@@ -1,6 +1,7 @@
 package com.example.movieapp.domain.repository
 
 import androidx.paging.PagingData
+import com.example.movieapp.data.local.entity.LikedItemEntity
 import com.example.movieapp.data.remote.model.movie.MovieCreditsResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
@@ -25,7 +26,9 @@ interface Repository {
     fun getSimilarMovies(movieId: Int): Flow<PagingData<ResultMovie>>
     fun getSimilarTVShows(tvId: Int): Flow<PagingData<ResultTVShow>>
     //Room
-    suspend fun likeItem(itemId: Int, type: String)
-    suspend fun unlikeItem(itemId: Int, type: String)
+    suspend fun likeItem(item: LikedItemEntity)
+    suspend fun unlikeItem(item: LikedItemEntity)
     suspend fun isItemLiked(itemId: Int, type: String): Boolean
+    fun getLikedMovies(): Flow<List<LikedItemEntity>>
+    fun getLikedTVShows(): Flow<List<LikedItemEntity>>
 }

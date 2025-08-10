@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class RepositoryImp @Inject constructor(
     private val apiService: ApiService,
-    private val likedMovieDao: LikedItemDao
+    private val likedItemDao: LikedItemDao
 ) : Repository{
 
     override suspend fun getPopularMovies(): ResultStates<List<ResultMovie>> {
@@ -136,16 +136,24 @@ class RepositoryImp @Inject constructor(
         ).flow
     }
 
-    override suspend fun likeItem(itemId: Int, type: String) {
-        likedMovieDao.likeItem(LikedItemEntity(itemId = itemId, type = type))
+    override suspend fun likeItem(item: LikedItemEntity) {
+        likedItemDao.likeItem(item)
     }
 
-    override suspend fun unlikeItem(itemId: Int, type: String) {
-        likedMovieDao.unlikeItem(LikedItemEntity(itemId = itemId, type = type))
+    override suspend fun unlikeItem(item: LikedItemEntity) {
+        likedItemDao.unlikeItem(item)
     }
 
     override suspend fun isItemLiked(itemId: Int, type: String): Boolean {
-        return likedMovieDao.isItemLiked(itemId = itemId, type = type)
+        return likedItemDao.isItemLiked(itemId = itemId, type = type)
+    }
+
+    override fun getLikedMovies(): Flow<List<LikedItemEntity>> {
+        return likedItemDao.getLikedMovies()
+    }
+
+    override fun getLikedTVShows(): Flow<List<LikedItemEntity>> {
+        return likedItemDao.getLikedTVShows()
     }
 
 }
