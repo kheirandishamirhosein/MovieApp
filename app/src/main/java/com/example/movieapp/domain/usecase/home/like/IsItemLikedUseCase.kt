@@ -1,4 +1,4 @@
-package com.example.movieapp.domain.usecase.like
+package com.example.movieapp.domain.usecase.home.like
 
 import com.example.movieapp.data.remote.model.MediaType
 import com.example.movieapp.domain.repository.Repository

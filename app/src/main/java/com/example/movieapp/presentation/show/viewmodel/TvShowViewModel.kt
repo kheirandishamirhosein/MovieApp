@@ -8,9 +8,9 @@ import com.example.movieapp.data.local.entity.LikedItemEntity
 import com.example.movieapp.data.remote.model.MediaType
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.data.remote.model.tvShow.details.TVShowCreditsResponse
-import com.example.movieapp.domain.usecase.like.IsItemLikedUseCase
-import com.example.movieapp.domain.usecase.like.LikeItemUseCase
-import com.example.movieapp.domain.usecase.like.UnlikeItemUseCase
+import com.example.movieapp.domain.usecase.home.like.IsItemLikedUseCase
+import com.example.movieapp.domain.usecase.home.like.LikeItemUseCase
+import com.example.movieapp.domain.usecase.home.like.UnlikeItemUseCase
 import com.example.movieapp.domain.usecase.show.GetOnTheAirTVShowsUseCase
 import com.example.movieapp.domain.usecase.show.GetPopularTVShowsUseCase
 import com.example.movieapp.domain.usecase.show.GetSimilarTVShowsUseCase

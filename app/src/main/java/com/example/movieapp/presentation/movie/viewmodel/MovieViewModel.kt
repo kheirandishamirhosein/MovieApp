@@ -16,9 +16,9 @@ import com.example.movieapp.domain.usecase.movie.GetTopRatedMoviesUseCase
 import com.example.movieapp.domain.usecase.movie.GetTrendingMoviesUseCase
 import com.example.movieapp.domain.usecase.movie.GetUpcomingMoviesUseCase
 import com.example.movieapp.domain.usecase.movie.PopularMovieListUseCase
-import com.example.movieapp.domain.usecase.like.IsItemLikedUseCase
-import com.example.movieapp.domain.usecase.like.LikeItemUseCase
-import com.example.movieapp.domain.usecase.like.UnlikeItemUseCase
+import com.example.movieapp.domain.usecase.home.like.IsItemLikedUseCase
+import com.example.movieapp.domain.usecase.home.like.LikeItemUseCase
+import com.example.movieapp.domain.usecase.home.like.UnlikeItemUseCase
 import com.example.movieapp.presentation.state.ResultStates
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
