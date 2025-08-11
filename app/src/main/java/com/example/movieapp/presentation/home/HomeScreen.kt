@@ -40,7 +40,7 @@ fun HomeScreen(
                 StaticMovieList(
                     movies = likedMovies.map { it.toResultMovie() },
                     onItemClick = { movie ->
-                        navController.navigate("movieDetails/${movie.id}")
+                        navController.navigate("movieDetail/${movie.id}")
                     }
                 )
             }
@@ -62,7 +62,7 @@ fun HomeScreen(
                 StaticTVShowList(
                     tvShows = likedTVShows.map { it.toResultTVShow() },
                     onItemClick = { tvShow ->
-                        navController.navigate("tvShowDetails/${tvShow.id}")
+                        navController.navigate("tvShowsDetail/${tvShow.id}")
                     }
                 )
             }
@@ -82,4 +82,3 @@ fun HomeScreen(
         }
     }
 }
-
