@@ -116,6 +116,8 @@ dependencies {
     implementation("androidx.room:room-ktx:2.7.2")
     //paging 3
     implementation("androidx.paging:paging-compose:3.3.6")
+    //Android youtube player
+    implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0")
 
 }
 
