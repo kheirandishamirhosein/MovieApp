@@ -45,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -76,11 +77,13 @@ fun DetailsMoviesScreen(
     val castState by viewModel.castState.collectAsState()
     val similarMovies = viewModel.similarMovies.collectAsLazyPagingItems()
     val isLiked by viewModel.isLiked.collectAsState()
+    val trailerKey = viewModel.trailerKey.collectAsState()
 
     LaunchedEffect(movieId) {
         viewModel.onEvent(MovieUiEvent.LoadMovieDetails(movieId))
         viewModel.onEvent(MovieUiEvent.LoadMovieCredits(movieId))
         viewModel.onEvent(MovieUiEvent.LoadSimilarMovies(movieId))
+        viewModel.fetchTrailerKey(movieId)
     }
 
     val isLoading = movieDetailState is ResultStates.Loading ||
@@ -118,7 +121,8 @@ fun DetailsMoviesScreen(
                         isLiked = isLiked,
                         onLikeClick = { movie ->
                             viewModel.toggleLike(movie, MediaType.MOVIE)
-                        }
+                        },
+                        trailerState = trailerKey.value
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     CastSection(castState)
@@ -137,7 +141,8 @@ fun DetailsMoviesScreen(
 fun MovieDetailsSection(
     movieDetailState: ResultStates<ResultMovie>,
     isLiked: Boolean,
-    onLikeClick: (ResultMovie) -> Unit
+    onLikeClick: (ResultMovie) -> Unit,
+    trailerState: ResultStates<String?>
     ) {
 
     val movie = (movieDetailState as ResultStates.Success).data
@@ -162,11 +167,11 @@ fun MovieDetailsSection(
                 .height(200.dp)
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
-                Image(
-                    painter = rememberImagePainter("https://image.tmdb.org/t/p/w500${movie.backdropPath}"),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+
+                MovieTrailerSection(
+                    trailerState = trailerState,
+                    backdropPath = movie.backdropPath,
+                    modifier = Modifier.fillMaxSize()
                 )
 
                 Row(
@@ -256,6 +261,56 @@ fun MovieDetailsSection(
         }
     }
 }
+
+@Composable
+fun MovieTrailerSection(
+    trailerState: ResultStates<String?>,
+    backdropPath: String?,
+    modifier: Modifier = Modifier
+) {
+    when (trailerState) {
+        is ResultStates.Loading -> {
+            Box(
+                modifier = modifier.fillMaxWidth().height(200.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+        is ResultStates.Error -> {
+            Box(
+                modifier = modifier.fillMaxWidth().height(200.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Failed to load trailer",
+                    color = Color.Red,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+        is ResultStates.Success -> {
+            val trailerKey = trailerState.data
+            if (trailerKey != null) {
+                YouTubeTrailerPlayer(
+                    videoKey = trailerKey,
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                )
+            } else {
+                Image(
+                    painter = rememberImagePainter("https://image.tmdb.org/t/p/w500$backdropPath"),
+                    contentDescription = null,
+                    modifier = modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            }
+        }
+    }
+}
+
+
 
 @Composable
 fun CastSection(castState: ResultStates<MovieCreditsResponse>) {

@@ -19,6 +19,7 @@ import com.example.movieapp.domain.usecase.movie.PopularMovieListUseCase
 import com.example.movieapp.domain.usecase.home.like.IsItemLikedUseCase
 import com.example.movieapp.domain.usecase.home.like.LikeItemUseCase
 import com.example.movieapp.domain.usecase.home.like.UnlikeItemUseCase
+import com.example.movieapp.domain.usecase.movie.GetMovieTrailerUseCase
 import com.example.movieapp.presentation.state.ResultStates
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -42,6 +43,7 @@ class MovieViewModel @Inject constructor(
     private val likeItemUseCase: LikeItemUseCase,
     private val unlikeItemUseCase: UnlikeItemUseCase,
     private val isItemLikedUseCase: IsItemLikedUseCase,
+    private val getMovieTrailerUseCase: GetMovieTrailerUseCase
 ) : ViewModel() {
 
     private var currentMovieId: Int? = null
@@ -77,6 +79,9 @@ class MovieViewModel @Inject constructor(
 
     private val _isLiked = MutableStateFlow(false)
     val isLiked: StateFlow<Boolean> = _isLiked
+
+    private val _trailerKey = MutableStateFlow<ResultStates<String?>>(ResultStates.Loading)
+    val trailerKey: StateFlow<ResultStates<String?>> = _trailerKey
 
     fun onEvent(event: MovieUiEvent) {
         when (event) {
@@ -156,6 +161,13 @@ class MovieViewModel @Inject constructor(
                 )
             }
             _isLiked.value = !currentlyLiked
+        }
+    }
+
+    fun fetchTrailerKey(movieId: Int) {
+        viewModelScope.launch {
+            _trailerKey.value = ResultStates.Loading
+            _trailerKey.value = getMovieTrailerUseCase(movieId)
         }
     }
 
