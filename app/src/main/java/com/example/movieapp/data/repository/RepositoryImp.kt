@@ -156,4 +156,24 @@ class RepositoryImp @Inject constructor(
         return likedItemDao.getLikedTVShows()
     }
 
+    override suspend fun getMovieTrailer(movieId: Int): ResultStates<String?> {
+        return apiWrapper {
+            val response = apiService.getMovieVideos(movieId)
+            response.results.firstOrNull {
+                it.site.equals("YouTube", ignoreCase = true) &&
+                        it.type.equals("Trailer", ignoreCase = true)
+            }?.key
+        }
+    }
+
+    override suspend fun getTVShowTrailer(tvId: Int): ResultStates<String?> {
+        return apiWrapper {
+            val response = apiService.getTVShowVideos(tvId)
+            response.results.firstOrNull {
+                it.site.equals("YouTube", ignoreCase = true) &&
+                        it.type.equals("Trailer", ignoreCase = true)
+            }?.key
+        }
+    }
+
 }

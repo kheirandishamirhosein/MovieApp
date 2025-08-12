@@ -31,4 +31,7 @@ interface Repository {
     suspend fun isItemLiked(itemId: Int, type: String): Boolean
     fun getLikedMovies(): Flow<List<LikedItemEntity>>
     fun getLikedTVShows(): Flow<List<LikedItemEntity>>
+    //Trailer
+    suspend fun getMovieTrailer(movieId: Int): ResultStates<String?>
+    suspend fun getTVShowTrailer(tvId: Int): ResultStates<String?>
 }
