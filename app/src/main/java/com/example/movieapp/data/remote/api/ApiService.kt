@@ -3,6 +3,7 @@ package com.example.movieapp.data.remote.api
 import com.example.movieapp.data.remote.model.movie.MovieCreditsResponse
 import com.example.movieapp.data.remote.model.movie.MovieResponse
 import com.example.movieapp.data.remote.model.movie.ResultMovie
+import com.example.movieapp.data.remote.model.VideoResponse
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.data.remote.model.tvShow.details.TVShowCreditsResponse
 import com.example.movieapp.data.remote.model.tvShow.onTheAir.OnTheAirTVShowsResponse
@@ -100,5 +101,17 @@ interface ApiService {
         @Query("language") language: String = "en-US",
         @Query("page") page: Int
     ): TVShowResponse
+
+    @GET("movie/{movie_id}/videos")
+    suspend fun getMovieVideos(
+        @Path("movie_id") movieId: Int,
+        @Query("language") language: String = "en-US"
+    ): VideoResponse
+
+    @GET("tv/{tv_id}/videos")
+    suspend fun getTVShowVideos(
+        @Path("tv_id") tvId: Int,
+        @Query("language") language: String = "en-US"
+    ): VideoResponse
 
 }
