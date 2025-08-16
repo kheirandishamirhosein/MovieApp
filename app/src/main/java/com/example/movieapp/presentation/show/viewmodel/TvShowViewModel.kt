@@ -15,6 +15,7 @@ import com.example.movieapp.domain.usecase.show.GetOnTheAirTVShowsUseCase
 import com.example.movieapp.domain.usecase.show.GetPopularTVShowsUseCase
 import com.example.movieapp.domain.usecase.show.GetSimilarTVShowsUseCase
 import com.example.movieapp.domain.usecase.show.GetTVShowCreditsUseCase
+import com.example.movieapp.domain.usecase.show.GetTVShowTrailerUseCase
 import com.example.movieapp.domain.usecase.show.GetTopRatedTVShowsUseCase
 import com.example.movieapp.domain.usecase.show.GetTrendingTVShowsUseCase
 import com.example.movieapp.domain.usecase.show.GetTvShowDetailsUseCase
@@ -40,6 +41,7 @@ class TvShowViewModel @Inject constructor(
     private val likeItemUseCase: LikeItemUseCase,
     private val unlikeItemUseCase: UnlikeItemUseCase,
     private val isItemLikedUseCase: IsItemLikedUseCase,
+    private val getTVShowTrailerUseCase: GetTVShowTrailerUseCase
 ): ViewModel() {
 
     private var currentTVSowId: Int? = null
@@ -74,6 +76,8 @@ class TvShowViewModel @Inject constructor(
     private val _isLiked = MutableStateFlow(false)
     val isLiked: StateFlow<Boolean> = _isLiked
 
+    private val _trailerKey = MutableStateFlow<ResultStates<String?>>(ResultStates.Loading)
+    val trailerKey: StateFlow<ResultStates<String?>> = _trailerKey
 
     fun onEvent(event: TvShowsUiEvent) {
         when(event) {
@@ -154,6 +158,13 @@ class TvShowViewModel @Inject constructor(
                 )
             }
             _isLiked.value = !currentlyLiked
+        }
+    }
+
+    fun fetchTrailerKey(showId: Int) {
+        viewModelScope.launch {
+            _trailerKey.value = ResultStates.Loading
+            _trailerKey.value = getTVShowTrailerUseCase(showId)
         }
     }
 

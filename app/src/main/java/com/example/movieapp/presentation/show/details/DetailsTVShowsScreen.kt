@@ -1,10 +1,12 @@
 package com.example.movieapp.presentation.show.details
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
@@ -49,12 +52,14 @@ import androidx.paging.LoadState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.MediaType
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.data.remote.model.tvShow.details.TVShowCreditsResponse
+import com.example.movieapp.presentation.movie.details.YouTubeTrailerPlayer
 import com.example.movieapp.presentation.show.lists.TVShowList
 import com.example.movieapp.presentation.state.ResultStates
 import com.example.movieapp.presentation.show.viewmodel.TvShowViewModel
@@ -75,11 +80,13 @@ fun DetailsTVShowsScreen(
     val castState by viewModel.castState.collectAsState()
     val similarTVShow = viewModel.similarTVShows.collectAsLazyPagingItems()
     val isLiked by viewModel.isLiked.collectAsState()
+    val trailerKey = viewModel.trailerKey.collectAsState()
 
     LaunchedEffect(tvShowId) {
         viewModel.onEvent(TvShowsUiEvent.LoadTvShowDetails(tvShowId))
         viewModel.onEvent(TvShowsUiEvent.LoadTVShowCredits(tvShowId))
         viewModel.onEvent(TvShowsUiEvent.LoadSimilarTVShows(tvShowId))
+        viewModel.fetchTrailerKey(tvShowId)
     }
 
     val isLoading = detailsTVShow is ResultStates.Loading ||
@@ -116,7 +123,8 @@ fun DetailsTVShowsScreen(
                         isLiked = isLiked,
                         onLikeClick = { tvShow ->
                             viewModel.toggleLike(tvShow = tvShow, MediaType.TV)
-                        }
+                        },
+                        trailerState = trailerKey.value
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     CastSection(castState)
@@ -135,7 +143,8 @@ fun DetailsTVShowsScreen(
 fun TVShowDetailsSection(
     tvShowDetailState: ResultStates<ResultTVShow>,
     isLiked: Boolean,
-    onLikeClick: (ResultTVShow) -> Unit
+    onLikeClick: (ResultTVShow) -> Unit,
+    trailerState: ResultStates<String?>
 ) {
     val tvShow = (tvShowDetailState as ResultStates.Success).data
     var showLikeMessage by remember { mutableStateOf(false) }
@@ -160,11 +169,11 @@ fun TVShowDetailsSection(
                 .height(200.dp)
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
-                Image(
-                    painter = rememberImagePainter("https://image.tmdb.org/t/p/w500${tvShow.backdropPath}"),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+
+                MovieTrailerSection(
+                    trailerState = trailerState,
+                    backdropPath = tvShow.backdropPath,
+                    modifier = Modifier.fillMaxSize()
                 )
 
                 Row(
@@ -253,6 +262,78 @@ fun TVShowDetailsSection(
             Text("Rating: ${tvShow.voteAverage.voteAverageFormatted()} (${tvShow.voteCount} votes)")
         }
     }
+}
+
+@Composable
+fun MovieTrailerSection(
+    trailerState: ResultStates<String?>,
+    backdropPath: String?,
+    modifier: Modifier = Modifier
+) {
+    var isPlaying by remember { mutableStateOf(false) }
+
+    when (trailerState) {
+        is ResultStates.Loading -> {
+            Box(
+                modifier = modifier.fillMaxWidth().height(200.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+        is ResultStates.Error -> {
+            Box(
+                modifier = modifier.fillMaxWidth().height(200.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Failed to load trailer",
+                    color = Color.Red,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+        is ResultStates.Success -> {
+            val trailerKey = trailerState.data
+            Log.d("TrailerDebug", "Trailer key: $trailerKey")
+
+            if (isPlaying && trailerKey != null) {
+                YouTubeTrailerPlayer(
+                    videoKey = trailerKey,
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                )
+            } else {
+                Box(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .clickable {
+                            if (trailerKey != null) isPlaying = true
+                        }
+                ) {
+                    Image(
+                        painter = rememberImagePainter("https://image.tmdb.org/t/p/w500$backdropPath"),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                    if (trailerKey != null) {
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
+                            contentDescription = "Play trailer",
+                            tint = Color.White,
+                            modifier = Modifier
+                                .size(48.dp)
+                                .align(Alignment.Center)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 
