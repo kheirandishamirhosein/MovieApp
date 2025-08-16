@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
@@ -268,6 +270,8 @@ fun MovieTrailerSection(
     backdropPath: String?,
     modifier: Modifier = Modifier
 ) {
+    var isPlaying by remember { mutableStateOf(false) }
+
     when (trailerState) {
         is ResultStates.Loading -> {
             Box(
@@ -291,7 +295,9 @@ fun MovieTrailerSection(
         }
         is ResultStates.Success -> {
             val trailerKey = trailerState.data
-            if (trailerKey != null) {
+            Log.d("TrailerDebug", "Trailer key: $trailerKey")
+
+            if (isPlaying && trailerKey != null) {
                 YouTubeTrailerPlayer(
                     videoKey = trailerKey,
                     modifier = modifier
@@ -299,18 +305,35 @@ fun MovieTrailerSection(
                         .height(200.dp)
                 )
             } else {
-                Image(
-                    painter = rememberImagePainter("https://image.tmdb.org/t/p/w500$backdropPath"),
-                    contentDescription = null,
-                    modifier = modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
+                Box(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .clickable {
+                            if (trailerKey != null) isPlaying = true
+                        }
+                ) {
+                    Image(
+                        painter = rememberImagePainter("https://image.tmdb.org/t/p/w500$backdropPath"),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                    if (trailerKey != null) {
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
+                            contentDescription = "Play trailer",
+                            tint = Color.White,
+                            modifier = Modifier
+                                .size(48.dp)
+                                .align(Alignment.Center)
+                        )
+                    }
+                }
             }
         }
     }
 }
-
-
 
 @Composable
 fun CastSection(castState: ResultStates<MovieCreditsResponse>) {
