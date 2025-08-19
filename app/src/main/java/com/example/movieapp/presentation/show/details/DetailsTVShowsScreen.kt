@@ -332,6 +332,7 @@ fun MovieTrailerSection(
                 }
             }
         }
+        is ResultStates.Idle -> {}
     }
 
 }
