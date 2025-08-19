@@ -48,7 +48,7 @@ class MovieViewModel @Inject constructor(
 
     private var currentMovieId: Int? = null
 
-    private val _popularMoviesState = MutableStateFlow<ResultStates<List<ResultMovie>>>(ResultStates.Loading)
+    private val _popularMoviesState = MutableStateFlow<ResultStates<List<ResultMovie>>>(ResultStates.Idle)
     val popularMoviesState: StateFlow<ResultStates<List<ResultMovie>>> = _popularMoviesState
 
     val nowPlayingMovies: Flow<PagingData<ResultMovie>> =
@@ -106,6 +106,7 @@ class MovieViewModel @Inject constructor(
     }
 
     private fun fetchPopularMovies() {
+        if (_popularMoviesState.value !is ResultStates.Idle) return
         viewModelScope.launch {
             _popularMoviesState.value = ResultStates.Loading
             _popularMoviesState.value = getPopularMovieListUseCase()
