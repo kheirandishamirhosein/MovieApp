@@ -39,10 +39,6 @@ fun MovieListScreen(
 
     LaunchedEffect(Unit) {
         viewModel.onEvent(MovieUiEvent.LoadPopularMovies)
-        viewModel.onEvent(MovieUiEvent.LoadNowPlayingMovies)
-        viewModel.onEvent(MovieUiEvent.LoadTopRatedMovies)
-        viewModel.onEvent(MovieUiEvent.LoadTrendingMovies)
-        viewModel.onEvent(MovieUiEvent.LoadUpcomingMovies)
     }
 
     val isLoading =
