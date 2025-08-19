@@ -53,7 +53,7 @@ class TvShowViewModel @Inject constructor(
     val topRatedTVShowsPaging: Flow<PagingData<ResultTVShow>> =
         getTopRatedTVShowsUseCase().cachedIn(viewModelScope)
 
-    private val _onTheAirTVShows = MutableStateFlow<ResultStates<List<ResultTVShow>>>(ResultStates.Loading)
+    private val _onTheAirTVShows = MutableStateFlow<ResultStates<List<ResultTVShow>>>(ResultStates.Idle)
     val onTheAirTVShows: StateFlow<ResultStates<List<ResultTVShow>>> = _onTheAirTVShows
 
     val trendingTVShowsPaging: Flow<PagingData<ResultTVShow>> =
@@ -103,6 +103,7 @@ class TvShowViewModel @Inject constructor(
     }
 
     private fun fetchOnTheAirTVShows() {
+        if (_onTheAirTVShows.value !is ResultStates.Idle) return
         viewModelScope.launch {
             _onTheAirTVShows.value = ResultStates.Loading
             _onTheAirTVShows.value = getOnTheAirTVShowsUseCase()

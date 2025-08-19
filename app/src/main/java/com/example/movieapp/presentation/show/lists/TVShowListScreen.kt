@@ -41,9 +41,6 @@ fun TvShowsListScreen(
     val onTheAirTVShows by viewModel.onTheAirTVShows.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.onEvent(TvShowsUiEvent.LoadPopularTvShows)
-        viewModel.onEvent(TvShowsUiEvent.LoadTopRatedTVShows)
-        viewModel.onEvent(TvShowsUiEvent.LoadTrendingTVShows)
         viewModel.onEvent(TvShowsUiEvent.LoadOnTheAirTVShows)
     }
 
