@@ -59,7 +59,7 @@ import coil.compose.rememberImagePainter
 import com.example.movieapp.data.remote.model.MediaType
 import com.example.movieapp.data.remote.model.tvShow.ResultTVShow
 import com.example.movieapp.data.remote.model.tvShow.details.TVShowCreditsResponse
-import com.example.movieapp.presentation.movie.details.YouTubeTrailerPlayer
+import com.example.movieapp.util.YouTubeTrailerPlayer
 import com.example.movieapp.presentation.show.lists.TVShowList
 import com.example.movieapp.presentation.state.ResultStates
 import com.example.movieapp.presentation.show.viewmodel.TvShowViewModel

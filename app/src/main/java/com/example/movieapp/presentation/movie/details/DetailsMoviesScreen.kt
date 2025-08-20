@@ -64,6 +64,7 @@ import com.example.movieapp.presentation.movie.list.MovieList
 import com.example.movieapp.presentation.movie.viewmodel.MovieUiEvent
 import com.example.movieapp.presentation.movie.viewmodel.MovieViewModel
 import com.example.movieapp.presentation.state.ResultStates
+import com.example.movieapp.util.YouTubeTrailerPlayer
 import com.example.movieapp.util.voteAverageFormatted
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

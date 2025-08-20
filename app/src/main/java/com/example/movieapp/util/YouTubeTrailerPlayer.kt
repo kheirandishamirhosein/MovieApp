@@ -1,4 +1,4 @@
-package com.example.movieapp.presentation.movie.details
+package com.example.movieapp.util
 
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
